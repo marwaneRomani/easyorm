@@ -1,0 +1,22 @@
+{
+  "models": "org.orm.models",
+
+  "database": {
+    "url": "jdbc:mysql://localhost/mydatabase",
+    "username": "myusername",
+    "password": "mypassword",
+    "strategy": "create",
+    "dialect" : "h2"
+  },
+  "connectionPool": {
+    "maxSize": 10
+  },
+  "cache": {
+    "enabled": true,
+    "maxSize": 1000,
+    "expireAfter": 3600
+  },
+  "transactionManager": {
+    "enabled": true
+  }
+}
