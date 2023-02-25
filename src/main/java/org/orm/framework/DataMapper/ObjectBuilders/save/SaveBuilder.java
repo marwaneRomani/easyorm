@@ -22,11 +22,11 @@ public class SaveBuilder<T> {
         this.isNormalAttributeQuesryBuild = false;
     }
 
-    public SaveBuilder<T> save(T objectToPersist) {
+    public List<Query> save(T objectToPersist) {
         saveNormalAttr(objectToPersist);
         saveRelation(objectToPersist);
 
-        return this;
+        return getQueries();
     }
 
     private void saveNormalAttr(T objectToPersist) {

@@ -2,19 +2,15 @@ package org.orm;
 
 import org.orm.framework.DataMapper.DataMapper;
 import org.orm.framework.OrmApplication;
-import org.orm.models.A;
-import org.orm.models.City;
-import org.orm.models.Player;
-import org.orm.models.Team;
-
-import java.util.List;
+import org.orm.models.B;
 
 public class Main {
     public static void main(String[] args) {
         OrmApplication.run();
 
         DataMapper
-            .buildObject(Team.class)
-            .findById(1);
+            .buildObject(B.class)
+            .findById(2)
+            .get("as");
     }
 }

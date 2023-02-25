@@ -6,16 +6,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SelectQueryBuilder {
-    private  String table;
+    private List<String> tables = new ArrayList<>();
     private List<String> columns = new ArrayList<>();
-
     private Map<String, Object> conditions = new HashMap<>();
-
     private String orderBy;
 
-
     public SelectQueryBuilder setTable(String table) {
-        this.table = table;
+        tables.add(table);
         return this;
     }
 
@@ -35,22 +32,21 @@ public class SelectQueryBuilder {
     }
 
     public Query build() {
-        QueryBuilder queryBuilder = new QueryBuilder(table, columns, conditions, orderBy);
+        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, conditions, orderBy);
         String sql = queryBuilder.toSql();
         Object[] values = queryBuilder.getValues();
 
         return new Query(sql, values);
     }
 
-
     public class QueryBuilder {
-        private String table;
+        private List<String> tables;
         private List<String> columns;
         private Map<String, Object> conditions;
         private String orderBy;
 
-        public QueryBuilder(String table, List<String> columns, Map<String, Object> conditions, String orderBy) {
-            this.table = table;
+        public QueryBuilder(List<String> tables, List<String> columns, Map<String, Object> conditions, String orderBy) {
+            this.tables = tables;
             this.columns = columns;
             this.conditions = conditions;
             this.orderBy = orderBy;
@@ -61,13 +57,13 @@ public class SelectQueryBuilder {
             builder.append("SELECT ");
 
             if (columns.isEmpty()) {
-                builder.append("*");
+
             } else {
                 builder.append(String.join(",", columns));
             }
 
             builder.append(" FROM ");
-            builder.append(table);
+            builder.append(String.join(",", tables));
 
             if (!conditions.isEmpty()) {
                 builder.append(" WHERE ");
@@ -75,7 +71,6 @@ public class SelectQueryBuilder {
                         .map(entry -> entry.getKey() + " = ?")
                         .collect(Collectors.joining(" AND ")));
             }
-
 
             if (orderBy != null) {
                 builder.append(" ORDER BY ");
@@ -90,6 +85,5 @@ public class SelectQueryBuilder {
             conditions.forEach((cond, val) -> values.add(val));
             return values.toArray();
         }
-
     }
 }
