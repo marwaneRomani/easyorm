@@ -227,7 +227,6 @@ public class CreateBuilder implements StategyBuilder {
 
     @Override
     public void build() {
-
         wrapInTransaction(connection, createTables() ,createRelations());
     }
 }

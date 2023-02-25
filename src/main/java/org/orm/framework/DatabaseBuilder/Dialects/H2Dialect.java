@@ -54,6 +54,19 @@ public class H2Dialect implements Dialect {
     }
 
     @Override
+    public String getDropTablesSyntax(String... tablesName) {
+        StringBuilder sb = new StringBuilder("DROP TABLE ");
+
+        for (int i = 0; i < tablesName.length; i++) {
+            sb.append(tablesName[i]);
+            if (i < tablesName.length - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
     public String getAddPrimaryKeySyntax(String tableName, List<String> primaryKeys) {
         StringBuilder builder = new StringBuilder();
         builder.append("ALTER TABLE ").append(tableName).append(" ADD PRIMARY KEY (");
