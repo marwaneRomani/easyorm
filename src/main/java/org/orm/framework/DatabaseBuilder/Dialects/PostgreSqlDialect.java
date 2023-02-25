@@ -54,11 +54,11 @@ public class PostgreSqlDialect implements Dialect {
     }
 
     @Override
-    public String getDropTablesSyntax(String... tablesName) {
+    public String getDropTablesSyntax(List<String> tablesName) {
         StringBuilder sb = new StringBuilder("DROP TABLE ");
-        for (int i = 0; i < tablesName.length; i++) {
-            sb.append(tablesName[i]);
-            if (i < tablesName.length - 1) {
+        for (int i = 0; i < tablesName.size(); i++) {
+            sb.append(tablesName.get(i));
+            if (i < tablesName.size() - 1) {
                 sb.append(", ");
             }
         }

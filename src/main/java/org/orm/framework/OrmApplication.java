@@ -18,7 +18,7 @@ public class OrmApplication {
             String dialect  = state.getDialect();
 
             DatabaseBuilder databaseBuilder = new DatabaseBuilder();
-            //databaseBuilder.build(strategy, dialect);
+            databaseBuilder.build(strategy, dialect);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

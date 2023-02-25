@@ -5,8 +5,8 @@
     "url": "jdbc:mysql://localhost/mydatabase",
     "username": "myusername",
     "password": "mypassword",
-    "strategy": "create",
-    "dialect" : "h2"
+    "strategy": "create-drop",
+    "dialect" : "mysql"
   },
   "connectionPool": {
     "maxSize": 10

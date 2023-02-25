@@ -38,7 +38,7 @@ public class CreateBuilder implements StategyBuilder {
         this.dialect = dialect;
     }
 
-    private Consumer<Connection> createTables() {
+    protected Consumer<Connection> createTables() {
         return connection -> {
             for (Entity entity : EntitiesDataSource.getModelsSchemas().values()) {
                 String createTableSyntax =
@@ -58,7 +58,7 @@ public class CreateBuilder implements StategyBuilder {
         };
     }
 
-    private Consumer<Connection> createRelations() {
+    protected Consumer<Connection> createRelations() {
         return connection -> {
             EntitiesDataSource
                     .getModelsSchemas()
@@ -94,7 +94,7 @@ public class CreateBuilder implements StategyBuilder {
     }
 
 
-    private String[] evaluateOneToOneRelation(Relation relation) throws Exception {
+    protected String[] evaluateOneToOneRelation(Relation relation) throws Exception {
         System.out.println(relation.toString());
 
 
@@ -136,7 +136,7 @@ public class CreateBuilder implements StategyBuilder {
 
     }
 
-    private String[] evaluateOneToManyRelation(Relation relation) throws Exception {
+    protected String[] evaluateOneToManyRelation(Relation relation) throws Exception {
         System.out.println(relation.toString());
         Method getSmall = OneToMany.class.getMethod("getSmall");
         Method getBig = OneToMany.class.getMethod("getBig");
@@ -182,7 +182,7 @@ public class CreateBuilder implements StategyBuilder {
         return statements;
     }
 
-    private String[] evaluateManyToManyRelation(Relation relation) throws Exception {
+    protected String[] evaluateManyToManyRelation(Relation relation) throws Exception {
         System.out.println(relation);
 
         Method getFirst = ManyToMany.class.getMethod("getFirst");
@@ -216,7 +216,7 @@ public class CreateBuilder implements StategyBuilder {
 
 
 
-    private String getEntityName(Attribute attribute) {
+    protected String getEntityName(Attribute attribute) {
         return EntitiesDataSource
                 .getModelsSchemas()
                 .get(attribute.getClazz().getSimpleName())
