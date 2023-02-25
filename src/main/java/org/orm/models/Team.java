@@ -9,6 +9,17 @@ public class Team {
     @Column(nullable = false)
     private String name;
 
+
+    private A a;
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
     private City city;
 
     private List<Player> players;
@@ -45,5 +56,14 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public A getA() {
+        return a;
+    }
+
+    public void setA(A a) {
+        this.a = a;
     }
 }

@@ -1,4 +1,4 @@
-package org.orm.framework.DataMapper.QueriyBuilders;
+package org.orm.framework.DataMapper.QueryBuilders;
 import java.util.ArrayList;
 import java.util.List;
 

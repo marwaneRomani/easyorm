@@ -15,6 +15,8 @@ public class Player extends Person {
     public Player(Long id, Byte number, String full_name, String cin) {
         this.id = id;
         this.number = number;
+        super.full_name = full_name;
+        super.cin = cin;
     }
 
     public Long getId() {

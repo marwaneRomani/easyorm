@@ -1,12 +1,16 @@
-package org.orm.framework.DataMapper.QueriyBuilders;
+package org.orm.framework.DataMapper.QueryBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.orm.framework.DataMapper.ObjectBuilders.Query;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SelectQueryBuilder {
     private  String table;
     private List<String> columns = new ArrayList<>();
-    private List<String> conditions = new ArrayList<>();
+
+    private Map<String, Object> conditions = new HashMap<>();
+
     private String orderBy;
 
 
@@ -20,8 +24,8 @@ public class SelectQueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder addCondition(String condition) {
-        conditions.add(condition);
+    public SelectQueryBuilder addCondition(String condition, Object value) {
+        conditions.put(condition, value);
         return this;
     }
 
@@ -31,17 +35,21 @@ public class SelectQueryBuilder {
     }
 
     public Query build() {
-        return new Query(table, columns, conditions, orderBy);
+        QueryBuilder queryBuilder = new QueryBuilder(table, columns, conditions, orderBy);
+        String sql = queryBuilder.toSql();
+        Object[] values = queryBuilder.getValues();
+
+        return new Query(sql, values);
     }
 
 
-    public class Query {
+    public class QueryBuilder {
         private String table;
         private List<String> columns;
-        private List<String> conditions;
+        private Map<String, Object> conditions;
         private String orderBy;
 
-        public Query(String table, List<String> columns, List<String> conditions, String orderBy) {
+        public QueryBuilder(String table, List<String> columns, Map<String, Object> conditions, String orderBy) {
             this.table = table;
             this.columns = columns;
             this.conditions = conditions;
@@ -63,8 +71,11 @@ public class SelectQueryBuilder {
 
             if (!conditions.isEmpty()) {
                 builder.append(" WHERE ");
-                builder.append(String.join(" AND ", conditions));
+                builder.append(conditions.entrySet().stream()
+                        .map(entry -> entry.getKey() + " = ?")
+                        .collect(Collectors.joining(" AND ")));
             }
+
 
             if (orderBy != null) {
                 builder.append(" ORDER BY ");
@@ -73,5 +84,12 @@ public class SelectQueryBuilder {
 
             return builder.toString();
         }
+
+        public Object[] getValues() {
+            List<Object> values = new ArrayList<>();
+            conditions.forEach((cond, val) -> values.add(val));
+            return values.toArray();
+        }
+
     }
 }

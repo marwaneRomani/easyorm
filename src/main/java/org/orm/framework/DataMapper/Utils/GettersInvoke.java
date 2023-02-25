@@ -10,11 +10,6 @@ public class GettersInvoke {
 
     public static Object getAttributeValue(Attribute attribute, Object object) {
         try {
-            System.out.println("get" +
-                    attribute.getOriginalName().substring(0, 1)
-                            .toUpperCase() +
-                    attribute.getOriginalName()
-                            .substring(1));
             Method getterOfAttribute = object.getClass()
                     .getMethod(
                             "get" +
@@ -31,7 +26,7 @@ public class GettersInvoke {
 
             return value;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + " infound getter ");
         }
     }
 

@@ -1,4 +1,4 @@
-package org.orm.framework.DataMapper.QueriyBuilders;
+package org.orm.framework.DataMapper.QueryBuilders;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ public class UpdateQueryBuilder {
 
     private String tableName;
     private Map<String, Object> columnValues;
-    private List<String> whereConditions;
+    private Map<String, Object> whereConditions;
 
     public Map<String, Object> getColumnValues() {
         return columnValues;
@@ -20,11 +20,11 @@ public class UpdateQueryBuilder {
         this.columnValues = columnValues;
     }
 
-    public List<String> getWhereConditions() {
+    public Map<String, Object> getWhereConditions() {
         return whereConditions;
     }
 
-    public void setWhereConditions(List<String> whereConditions) {
+    public void setWhereConditions(LinkedHashMap<String, Object> whereConditions) {
         this.whereConditions = whereConditions;
     }
 
@@ -39,12 +39,12 @@ public class UpdateQueryBuilder {
     public UpdateQueryBuilder(String tableName) {
         this.tableName = tableName;
         this.columnValues = new LinkedHashMap<>();
-        this.whereConditions = new ArrayList<>();
+        this.whereConditions = new LinkedHashMap<>();
     }
 
     public UpdateQueryBuilder() {
         this.columnValues = new LinkedHashMap<>();
-        this.whereConditions = new ArrayList<>();
+        this.whereConditions = new LinkedHashMap<>();
     }
 
 
@@ -53,8 +53,8 @@ public class UpdateQueryBuilder {
         return this;
     }
 
-    public UpdateQueryBuilder where(String condition) {
-        this.whereConditions.add(condition);
+    public UpdateQueryBuilder where(String condition, Object value) {
+        this.whereConditions.put(condition, value);
         return this;
     }
 
@@ -68,18 +68,32 @@ public class UpdateQueryBuilder {
         sb.append(columnValues.entrySet().stream()
                 .map(entry -> entry.getKey() + " = ?")
                 .collect(Collectors.joining(", ")));
+
         if (!whereConditions.isEmpty()) {
-            sb.append(" WHERE ")
-                    .append(String.join(" AND ", whereConditions));
+            sb.append(" WHERE ");
+            sb.append(whereConditions.entrySet().stream()
+                    .map(entry -> entry.getKey() + " = ?")
+                    .collect(Collectors.joining(" AND ")));
         }
+
+//        sb.append(whereConditions.entrySet().stream()
+//                .map(entry -> entry.getKey() + " = ?")
+//                .collect(Collectors.joining(", ")));
+
+//        if (!whereConditions.isEmpty()) {
+//            sb.append(" WHERE ")
+//                    .append(String.join(" AND ", whereConditions));
+//        }
+
         return sb.toString();
     }
 
     public Object[] getValues() {
         List<Object> values = new ArrayList<>();
-        columnValues.forEach((column, value) -> {
-            values.add(value);
-        });
+
+        columnValues.forEach((column, value) -> values.add(value));
+
+        whereConditions.forEach((cond, val) -> values.add(val));
 
         return values.toArray();
     }

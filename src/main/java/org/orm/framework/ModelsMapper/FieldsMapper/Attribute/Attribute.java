@@ -22,6 +22,11 @@ public class Attribute {
     public Attribute() {
         this.mapped = false;
         this.heritant = new ArrayList<>();
+        this.nullable = true;
+        this.isAutoIncrement = false;
+        this.unique = false;
+        this.isInherited = false;
+
     }
 
     public Attribute(Attribute other) {
