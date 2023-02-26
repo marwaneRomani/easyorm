@@ -43,7 +43,11 @@ public class ApplicationState {
 
     private void readConfig() {
         try {
-            ConfigReader configReader = new ConfigReader(this.configPath);
+            URL resource = getClass().getClassLoader().getResource("config.json");
+
+            this.configPath = resource.getPath();
+
+            ConfigReader configReader = new ConfigReader(configPath);
 
             modelsPath = configReader.getModelsPath();
 

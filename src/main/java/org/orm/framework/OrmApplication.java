@@ -11,7 +11,6 @@ import java.sql.Connection;
 
 // the facade for the client
 public class OrmApplication {
-
     public static void run() {
         try {
             ApplicationState state = ApplicationState.getState();
