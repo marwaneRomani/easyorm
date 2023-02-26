@@ -1,14 +1,17 @@
 package org.orm.framework.ApplicationState;
 
 import java.io.IOException;
+import java.net.URL;
+
 import org.json.simple.parser.ParseException ;
 
 import org.orm.framework.ConfigReader.ConfigReader;
 
 public class ApplicationState {
 
-    private String modelsPath;
+    private static ApplicationState state = null;
 
+    private String modelsPath;
 
     private String configPath;
 
@@ -26,15 +29,15 @@ public class ApplicationState {
 
     private Boolean isTransactionManagerEnabled;
 
+    private ApplicationState() {
 
-    private ApplicationState(String configPath) {
-        this.configPath = configPath;
     }
 
-    public static ApplicationState getState(String configPath) {
-        ApplicationState state = new ApplicationState(configPath);
-        state.readConfig();
-
+    public static ApplicationState getState() {
+        if (state != null) {
+            state = new ApplicationState();
+            state.readConfig();
+        }
         return state;
     }
 

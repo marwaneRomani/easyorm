@@ -7,6 +7,7 @@ public class Condition {
     private List<String> conditons = new ArrayList<>();
     private List<Object> values = new ArrayList<>();
 
+
     public void addCondition(String condition, Object value) {
         conditons.add(condition);
         values.add(value);

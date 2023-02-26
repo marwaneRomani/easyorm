@@ -28,11 +28,11 @@ public class DatabaseBuilder {
         put("postgresql", PostgreSqlDialect.class);
     }};
 
-    public void build(String strategy, String dialect) throws Exception {
+    public void build(String strategy, String dialect, Connection connection) throws Exception {
         Dialect dbDialect = dialects.get(dialect).newInstance();
         StategyBuilder dbStrategy = strategies.get(strategy.toLowerCase()).newInstance();
 
-        Connection connection =  DriverManager.getConnection("jdbc:mysql://localhost:3306/Team","root", "134194630");
+//        Connection connection =  DriverManager.getConnection("jdbc:mysql://localhost:3306/Team","root", "134194630");
 
         dbStrategy.setDialect(dbDialect);
         dbStrategy.setConnection(connection);

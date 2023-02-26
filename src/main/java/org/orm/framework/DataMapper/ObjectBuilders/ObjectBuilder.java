@@ -1,35 +1,30 @@
 package org.orm.framework.DataMapper.ObjectBuilders;
 
+import org.orm.framework.ApplicationState.ApplicationState;
+import org.orm.framework.ConnectionsPool.ConnectionPool;
 import org.orm.framework.DataMapper.ObjectBuilders.find.FindBuilder;
+import org.orm.framework.DataMapper.ObjectBuilders.find.RelationEvaluator;
 import org.orm.framework.DataMapper.ObjectBuilders.save.SaveBuilder;
-import org.orm.framework.DataMapper.Utils.FindAttribute;
-import org.orm.framework.DataMapper.Utils.FindAttributeRelation;
-import org.orm.framework.DataMapper.Utils.GettersInvoke;
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
 import org.orm.framework.EntitiesDataSource.Entity;
-import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
-import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.AttributeList;
-import org.orm.framework.ModelsMapper.FieldsMapper.Relation.ManyToMany;
-import org.orm.framework.ModelsMapper.FieldsMapper.Relation.OneToMany;
-import org.orm.framework.ModelsMapper.FieldsMapper.Relation.OneToOne;
-import org.orm.framework.ModelsMapper.FieldsMapper.Relation.Relation;
 
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class ObjectBuilder<T> {
     private Class<?> model;
     private T object;
     private Entity entity;
-
+    private ApplicationState state;
 
     public ObjectBuilder(Class<?> model) {
         this.model = model;
+        this.state = ApplicationState.getState();
         try {
-
             object = (T) Class.forName(model.getName()).newInstance();
             entity = EntitiesDataSource.getModelsSchemas().get(model.getSimpleName());
+
 
             if (entity == null) {
                 throw new Exception("entity not found.");
@@ -46,12 +41,19 @@ public class ObjectBuilder<T> {
     * */
 
     public T save(T object) {
-        SaveBuilder<T> saveBuilder = new SaveBuilder<>(entity);
+        // pool connection
+        ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
 
-        // build queries
+        SaveBuilder<T> saveBuilder = new SaveBuilder<>(entity);
         List<Query> queries = saveBuilder.save(object);
 
-        this.build(queries);
+        try {
+            Connection connection = pool.getConnection();
+            // jdbc Template
+            pool.releaseConnection(connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         return object;
     }
@@ -76,38 +78,14 @@ public class ObjectBuilder<T> {
     }
 
 
-    public ObjectBuilder<T> findOne(Predicate<T> predicate) {
+    public ObjectBuilder<T> findOne() {
         return this;
     }
 
 
     public ObjectBuilder<T> get(String relationName) {
-        FindBuilder findBuilder = new FindBuilder(entity);
-
-        Attribute attribute = FindAttribute.find(entity, relationName);
-        Relation relation = FindAttributeRelation.find(attribute, entity);
-
-
-        if (attribute instanceof AttributeList) {
-            if (relation instanceof OneToMany) {
-                FindBuilder findBuilder1 = new FindBuilder(EntitiesDataSource.getModelsSchemas().get(((AttributeList) attribute).getGenericType()));
-                Query queryForList = findBuilder1.findByCondition(relation.foreignKeyRef(), GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object));
-                System.out.println("execute " + queryForList.getQuery());
-                System.out.println("values " + queryForList.getValues());
-                // set the result to the object
-            }
-            else {
-                // select * from Player p , Player_Match p_m where p.id = p_m.idp;
-                FindBuilder findBuilder1 = new FindBuilder(EntitiesDataSource.getModelsSchemas().get(((AttributeList) attribute).getGenericType()));
-                findBuilder1
-                     .findFromManyTables(((ManyToMany)relation).getTableName(), null);
-
-            }
-        }
-        else {
-
-        }
-
+        RelationEvaluator<T> evaluator = new RelationEvaluator<>(entity,relationName, object);
+        evaluator.evaluate();
         return this;
     }
 

@@ -11,7 +11,6 @@ public interface Dialect {
     String getAddColumnSyntax(String tableName,  Attribute column);
     String getDropTableSyntax(String tableName);
     String getDropTablesSyntax(List<String> tablesName);
-
     String getAddPrimaryKeySyntax(String tableName, List<String> primaryKeys);
     String getAddForeignKeySyntax(String tableName, String foreignKeyName, List<String> localColumns, String referencedTable, List<String> referencedColumns);
     String getAutoIncrementKeyword();

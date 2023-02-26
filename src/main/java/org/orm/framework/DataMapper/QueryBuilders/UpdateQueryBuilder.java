@@ -76,15 +76,6 @@ public class UpdateQueryBuilder {
                     .collect(Collectors.joining(" AND ")));
         }
 
-//        sb.append(whereConditions.entrySet().stream()
-//                .map(entry -> entry.getKey() + " = ?")
-//                .collect(Collectors.joining(", ")));
-
-//        if (!whereConditions.isEmpty()) {
-//            sb.append(" WHERE ")
-//                    .append(String.join(" AND ", whereConditions));
-//        }
-
         return sb.toString();
     }
 
