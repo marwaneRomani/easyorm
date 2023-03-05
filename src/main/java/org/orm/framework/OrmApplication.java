@@ -2,7 +2,7 @@ package org.orm.framework;
 
 import org.orm.framework.ApplicationState.ApplicationState;
 import org.orm.framework.ConnectionsPool.ConnectionPool;
-import org.orm.framework.DataMapper.DataMapper;
+import org.orm.framework.DataMapper1.ObjectBuilder;
 import org.orm.framework.DatabaseBuilder.DatabaseBuilder;
 import org.orm.framework.ModelsMapper.ModelsMapper;
 
