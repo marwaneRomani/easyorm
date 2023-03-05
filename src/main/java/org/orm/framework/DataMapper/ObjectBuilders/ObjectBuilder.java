@@ -25,7 +25,6 @@ public class ObjectBuilder<T> {
             object = (T) Class.forName(model.getName()).newInstance();
             entity = EntitiesDataSource.getModelsSchemas().get(model.getSimpleName());
 
-
             if (entity == null) {
                 throw new Exception("entity not found.");
             }
@@ -38,7 +37,8 @@ public class ObjectBuilder<T> {
 
     /**
      * persistence methods
-    * */
+     *
+     *  */
 
     public T save(T object) {
         // pool connection
@@ -81,7 +81,6 @@ public class ObjectBuilder<T> {
     public ObjectBuilder<T> findOne() {
         return this;
     }
-
 
     public ObjectBuilder<T> get(String relationName) {
         RelationEvaluator<T> evaluator = new RelationEvaluator<>(entity,relationName, object);

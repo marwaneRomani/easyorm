@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectionPool {
+        private static ConnectionPool pool = null;
+
         private String url;
         private String username;
         private String password;
@@ -15,7 +17,7 @@ public class ConnectionPool {
         private List<Connection> availableConnections;
         private List<Connection> usedConnections;
 
-        public ConnectionPool(String url, String username, String password, int maxPoolSize) {
+        private ConnectionPool(String url, String username, String password, int maxPoolSize) {
             this.url = url;
             this.username = username;
             this.password = password;
@@ -23,6 +25,13 @@ public class ConnectionPool {
             this.currentPoolSize = 0;
             this.availableConnections = new ArrayList<>();
             this.usedConnections = new ArrayList<>();
+        }
+
+        public static ConnectionPool getInstance(String url, String username, String password, int maxPoolSize) {
+            if (pool != null)
+                pool = new ConnectionPool(url, username, password, maxPoolSize);
+
+            return pool;
         }
 
         public Connection getConnection() throws SQLException {

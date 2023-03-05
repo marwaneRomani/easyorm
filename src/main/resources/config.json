@@ -15,8 +15,5 @@
     "enabled": true,
     "maxSize": 1000,
     "expireAfter": 3600
-  },
-  "transactionManager": {
-    "enabled": true
   }
 }

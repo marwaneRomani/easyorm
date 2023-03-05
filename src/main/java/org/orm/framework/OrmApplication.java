@@ -15,14 +15,13 @@ public class OrmApplication {
         try {
             ApplicationState state = ApplicationState.getState();
             ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(), state.getUsername(), state.getPassword(), state.getConnectionPoolMaxSize());
-            Connection connection;
 
             ModelsMapper.map(state.getModelsPath());
 
             String strategy = state.getStrategy();
             String dialect  = state.getDialect();
 
-            connection = pool.getConnection();
+            Connection connection = pool.getConnection();
 
             DatabaseBuilder databaseBuilder = new DatabaseBuilder();
             databaseBuilder.build(strategy, dialect, connection);
