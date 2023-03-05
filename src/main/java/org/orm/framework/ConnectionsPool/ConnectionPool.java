@@ -28,7 +28,7 @@ public class ConnectionPool {
         }
 
         public static ConnectionPool getInstance(String url, String username, String password, int maxPoolSize) {
-            if (pool != null)
+            if (pool == null)
                 pool = new ConnectionPool(url, username, password, maxPoolSize);
 
             return pool;

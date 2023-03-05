@@ -1,7 +1,10 @@
-package org.orm.framework.DataMapper.ObjectBuilders;
+package org.orm.framework.DataMapper;
 
 import org.orm.framework.ApplicationState.ApplicationState;
 import org.orm.framework.ConnectionsPool.ConnectionPool;
+import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
+import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplateImpl;
+import org.orm.framework.DataMapper.ObjectBuilders.Query;
 import org.orm.framework.DataMapper.ObjectBuilders.find.FindBuilder;
 import org.orm.framework.DataMapper.ObjectBuilders.find.RelationEvaluator;
 import org.orm.framework.DataMapper.ObjectBuilders.save.SaveBuilder;
@@ -17,7 +20,7 @@ public class ObjectBuilder<T> {
     private T object;
     private Entity entity;
     private ApplicationState state;
-
+    private JdbcTemplate template;
     public ObjectBuilder(Class<?> model) {
         this.model = model;
         this.state = ApplicationState.getState();
@@ -43,14 +46,21 @@ public class ObjectBuilder<T> {
     public T save(T object) {
         // pool connection
         ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
-
         SaveBuilder<T> saveBuilder = new SaveBuilder<>(entity);
         List<Query> queries = saveBuilder.save(object);
 
         try {
             Connection connection = pool.getConnection();
-            // jdbc Template
+            //jdbc template
+            template = new JdbcTemplateImpl(connection);
+
+            queries.forEach(query -> {
+                template.nonQuery(query.getQuery(), query.getValues(), entity, object);
+            });
+
             pool.releaseConnection(connection);
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -63,6 +73,7 @@ public class ObjectBuilder<T> {
 
         Query query = findBuilder.findAll();
 
+        System.out.println(query.getQuery());
         return null;
     }
 

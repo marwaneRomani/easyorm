@@ -5,7 +5,7 @@
     "url": "jdbc:mysql://localhost/Team",
     "username": "root",
     "password": "134194630",
-    "strategy": "create",
+    "strategy": "create-drop",
     "dialect" : "mysql"
   },
   "connectionPool": {

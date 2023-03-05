@@ -6,7 +6,6 @@ import org.orm.framework.DataMapper.DataMapper;
 import org.orm.framework.DatabaseBuilder.DatabaseBuilder;
 import org.orm.framework.ModelsMapper.ModelsMapper;
 
-import java.net.URL;
 import java.sql.Connection;
 
 // the facade for the client
@@ -25,9 +24,15 @@ public class OrmApplication {
 
             DatabaseBuilder databaseBuilder = new DatabaseBuilder();
             databaseBuilder.build(strategy, dialect, connection);
+
+            pool.releaseConnection(connection);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+    public static <T> ObjectBuilder<T> buildObject(Class<T> model) {
+        return new ObjectBuilder<>(model);
+    }
+
 }

@@ -16,7 +16,7 @@ public class DatabaseBuilder {
 
     private final Map<String , Class<? extends StategyBuilder> > strategies = new HashMap<>(){{
         put("create", CreateBuilder.class);
-
+        put("create-drop", CreateDropBuilder.class);
     }};
 
     private final Map<String, Class<? extends Dialect>> dialects = new HashMap<>() {{

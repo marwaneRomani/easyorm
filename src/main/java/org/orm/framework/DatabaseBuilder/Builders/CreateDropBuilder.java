@@ -9,11 +9,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-
-import static org.orm.framework.TransactionsManager.Transaction.wrapInTransaction;
 
 public class CreateDropBuilder extends CreateBuilder  implements StategyBuilder {
     private Connection connection;

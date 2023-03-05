@@ -27,14 +27,13 @@ public class ApplicationState {
     private Integer cacheMaxSize;
     private Integer cacheExpireAfter;
 
-    private Boolean isTransactionManagerEnabled;
 
     private ApplicationState() {
 
     }
 
     public static ApplicationState getState() {
-        if (state != null) {
+        if (state == null) {
             state = new ApplicationState();
             state.readConfig();
         }
@@ -63,7 +62,6 @@ public class ApplicationState {
             cacheMaxSize = configReader.getCacheMaxSize();
             cacheExpireAfter = configReader.getCacheExpireAfter();
 
-            isTransactionManagerEnabled = configReader.isTransactionManagerEnabled();
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -105,10 +103,6 @@ public class ApplicationState {
 
     public Integer getCacheExpireAfter() {
         return cacheExpireAfter;
-    }
-
-    public Boolean getTransactionManagerEnabled() {
-        return isTransactionManagerEnabled;
     }
 
     public String getDialect() { return dialect; }
