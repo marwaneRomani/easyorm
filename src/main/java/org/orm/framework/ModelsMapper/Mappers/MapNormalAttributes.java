@@ -225,12 +225,14 @@ public class MapNormalAttributes {
                 return "INT";
             case "Long":
                 return "BIGINT";
-            case "Foat":
+            case "Float":
                 return "FLOAT";
             case "Double":
                 return "DOUBLE";
             case "String":
                 return "VARCHAR(45)";
+            case "Date":
+                return "DATE";
             }
 
             return "OTHER";

@@ -1,7 +1,6 @@
 package org.orm.framework.ModelsMapper;
 
 import java.lang.reflect.Modifier;
-import java.util.Collection;
 import java.util.List;
 
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
@@ -30,8 +29,8 @@ public class ModelsMapper {
     }
 
     private static void mapNormalAttributes(List<Class<?>> models) {
+        // TODO no field && no parent => exception
         models
-           .stream()
            .forEach((model) -> {
                 Entity entity = new Entity(model);
                 if (Modifier.isAbstract(model.getModifiers()))
@@ -46,6 +45,7 @@ public class ModelsMapper {
     }
 
     private static void mapInheritedAttributes() {
+        //TODO inherited field have the same name of existing field => exception
         EntitiesDataSource
                 .getModelsSchemas()
                 .entrySet()

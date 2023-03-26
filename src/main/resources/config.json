@@ -2,10 +2,10 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/Team",
+    "url": "jdbc:mysql://localhost/SocialNetwork",
     "username": "root",
     "password": "134194630",
-    "strategy": "create-drop",
+    "strategy": "create",
     "dialect" : "mysql"
   },
   "connectionPool": {

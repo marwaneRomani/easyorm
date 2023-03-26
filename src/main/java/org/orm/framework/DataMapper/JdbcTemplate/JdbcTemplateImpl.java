@@ -169,6 +169,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                             i + 1, Short.parseShort(arguments[i].toString())
                     );
                     break;
+
                 case "Integer":
                     ps.setInt(
                             i + 1, Integer.parseInt(arguments[i].toString())
@@ -204,7 +205,6 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                             i + 1, Date.valueOf(arguments[i].toString())
                     );
                     break;
-                //TODO if field is required
             }
         };
     }

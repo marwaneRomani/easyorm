@@ -45,8 +45,7 @@ public class ConfigReader {
             return (String) dbConfig.get("dialect");
         }
 
-
-    public int getConnectionPoolMaxSize() {
+        public int getConnectionPoolMaxSize() {
             JSONObject connectionPoolConfig = (JSONObject) jsonObject.get("connectionPool");
             return Integer.parseInt(connectionPoolConfig.get("maxSize").toString());
         }
@@ -71,22 +70,3 @@ public class ConfigReader {
             return (boolean) tmConfig.get("enabled");
         }
     }
-
-
-
-//try {
-//        ConfigReader configReader = new ConfigReader("config.json");
-//        String databaseUrl = configReader.getDatabaseUrl();
-//        String databaseUsername = configReader.getDatabaseUsername();
-//        String databasePassword = configReader.getDatabasePassword();
-//        int connectionPoolMaxSize = configReader.getConnectionPoolMaxSize();
-//        boolean isCacheEnabled = configReader.isCacheEnabled();
-//        int cacheMaxSize = configReader.getCacheMaxSize();
-//        int cacheExpireAfter = configReader.getCacheExpireAfter();
-//        boolean isTransactionManagerEnabled = configReader.isTransactionManagerEnabled();
-//
-//        // Use the configuration values as needed...
-//        } catch (IOException | ParseException e) {
-//        e.printStackTrace();
-//        System.exit(1);
-//        }

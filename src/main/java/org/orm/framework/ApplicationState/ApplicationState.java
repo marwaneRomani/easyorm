@@ -29,7 +29,6 @@ public class ApplicationState {
 
 
     private ApplicationState() {
-
     }
 
     public static ApplicationState getState() {

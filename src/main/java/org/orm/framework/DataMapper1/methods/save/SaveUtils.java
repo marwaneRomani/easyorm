@@ -33,11 +33,13 @@ public class SaveUtils<T> {
         // specify the columns and values to insert
         entity.getNormalAttributes()
                 .forEach(attribute -> {
-                    insertQueryBuilder.column(
-                            attribute.getName()
-                    ).value(
-                            GettersInvoke.getAttributeValue(attribute, objectToPersist)
-                    );
+                    if (!attribute.isAutoIncrement()) {
+                        insertQueryBuilder.column(
+                                attribute.getName()
+                        ).value(
+                                GettersInvoke.getAttributeValue(attribute, objectToPersist)
+                        );
+                    }
                 });
 
         String sql = insertQueryBuilder.build();

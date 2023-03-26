@@ -11,6 +11,7 @@ public class ModelsLoader {
         List<Class<?>> classes = new ArrayList<>();
 
         File directory = null;
+
         try {
             ClassLoader cld = Thread.currentThread().getContextClassLoader();
             if (cld == null) {

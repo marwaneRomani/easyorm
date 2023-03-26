@@ -61,7 +61,13 @@ public class MapRelations {
                     }
                 })
                 .collect(Collectors.toList());
-        Attribute first = mappedAttr.stream().findFirst().get();
+
+        // exception
+        Attribute first = mappedAttr.stream().findFirst().orElse(null);
+
+// TODO throw an exception if first is null
+//        if (first == null)
+//            throw new Exception();
 
         first.mapp(true);
 

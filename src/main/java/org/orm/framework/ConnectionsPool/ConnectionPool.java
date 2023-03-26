@@ -61,9 +61,11 @@ public class ConnectionPool {
         public void closeAllConnections() throws SQLException {
             for (Connection connection : availableConnections) {
                 connection.close();
+                availableConnections.remove(connection);
             }
             for (Connection connection : usedConnections) {
                 connection.close();
+                usedConnections.remove(connection);
             }
         }
 }
