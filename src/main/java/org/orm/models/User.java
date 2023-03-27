@@ -16,12 +16,49 @@ public @Data class User {
     private String lastName;
     private Integer age;
 
+    private Filiere filiere;
+
     private List<Message> sentMessages;
     private List<Message> receivedMessages;
-    private Filiere filiere;
     private List<Notification> notifications;
     private List<Post> posts;
     private List<Commentaire> commentaires;
     private List<SubCommentaire> subCommentaires;
     private List<LignePostReaction> lignePostReactions;
+
+
+
+    public User(String cin, String cne, String name, String email, String lastName, Integer age) {
+        this.cin = cin;
+        this.cne = cne;
+        this.name = name;
+        this.email = email;
+        this.lastName = lastName;
+        this.age = age;
+    }
+
+    public User(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere) {
+        this.cin = cin;
+        this.cne = cne;
+        this.name = name;
+        this.email = email;
+        this.lastName = lastName;
+        this.age = age;
+
+        this.filiere = filiere;
+    }
+
+    public User(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere, List<Post> posts) {
+        this.cin = cin;
+        this.cne = cne;
+        this.name = name;
+        this.email = email;
+        this.lastName = lastName;
+        this.age = age;
+
+        this.filiere = filiere;
+        this.posts = posts;
+    }
+
+
 }

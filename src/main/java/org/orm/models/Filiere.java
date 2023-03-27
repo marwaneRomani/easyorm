@@ -13,4 +13,9 @@ public @Data class Filiere {
     private String description;
 
     private List<User> students;
+
+    public Filiere(String nom, String description) {
+        this.nom = nom;
+        this.description = description;
+    }
 }

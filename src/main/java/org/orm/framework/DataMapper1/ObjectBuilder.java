@@ -3,6 +3,8 @@ package org.orm.framework.DataMapper1;
 import org.orm.framework.ApplicationState.ApplicationState;
 import org.orm.framework.ConnectionsPool.ConnectionPool;
 import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplateImpl;
+import org.orm.framework.DataMapper.ObjectBuilders.Query;
+import org.orm.framework.DataMapper.ObjectBuilders.find.FindBuilder;
 import org.orm.framework.DataMapper1.methods.save.Save;
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
 import org.orm.framework.EntitiesDataSource.Entity;
@@ -45,11 +47,11 @@ public class ObjectBuilder<T> {
             ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
             Connection connection = pool.getConnection();
 
-            Save<T> saveMethod = new Save<>(new JdbcTemplateImpl(connection));
+            Save<T> saveObject = new Save<>(new JdbcTemplateImpl(connection));
 
 
             Method save = Save.class.getMethod("save", Entity.class, Object.class);
-            Transaction.wrapMethodInTransaction(connection, saveMethod, save, entity, object);
+            Transaction.wrapMethodInTransaction(connection, saveObject, save, entity, object);
 
             pool.releaseConnection(connection);
 
@@ -59,6 +61,32 @@ public class ObjectBuilder<T> {
             throw new RuntimeException(e);
         }
     }
+
+    public T find(T object) {
+        try {
+            ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
+            Connection connection = pool.getConnection();
+
+
+            pool.releaseConnection(connection);
+
+            return object;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public T findById(Object id) {
+        FindBuilder findBuilder = new FindBuilder(entity);
+        Query byId = findBuilder.findById(id);
+
+        System.out.println(byId.getQuery());
+        // execute the query
+
+        return null;
+    }
+
 
 
 }

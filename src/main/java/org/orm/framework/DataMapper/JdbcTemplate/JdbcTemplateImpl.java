@@ -202,7 +202,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
                 case "Date" :
                     ps.setDate(
-                            i + 1, Date.valueOf(arguments[i].toString())
+                            i + 1, new java.sql.Date(((java.util.Date)arguments[i]).getTime())
                     );
                     break;
             }

@@ -22,4 +22,16 @@ public @Data class Post {
 
     private List<LignePostReaction> lignePostReactions;
 
+    public Post(Long id, String content, Date date) {
+        this.id = id;
+        this.content = content;
+        this.date = date;
+    }
+
+    public Post(Long id, String content, Date date, User proprietaire) {
+        this.id = id;
+        this.content = content;
+        this.date = date;
+        this.proprietaire = proprietaire;
+    }
 }
