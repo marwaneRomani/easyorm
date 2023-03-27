@@ -8,6 +8,7 @@ import org.orm.framework.ModelsMapper.Annotations.Table;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.AttributeList;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
+import org.orm.framework.customException.ORMException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapNormalAttributes {
-    public static void mapModels(Entity entity) {
+    public static void mapModels(Entity entity) throws ORMException {
 
         List<Field> fields = getDeclaredFieldsOfModel(entity.getModel());
         PrimaryKey primaryKey = getPrimaryKey(fields);
@@ -40,7 +41,10 @@ public class MapNormalAttributes {
         entity.setRelationalAtrributes(relations);
     }
 
-    private static List<Field> getDeclaredFieldsOfModel(Class model) {
+    private static List<Field> getDeclaredFieldsOfModel(Class model) throws ORMException {
+        if(model.getDeclaredFields().length==0){
+            throw new ORMException("this model " + model.getSimpleName()+ " does not have any attributes");
+        }
         return
                 Arrays.stream(model.getDeclaredFields())
                         .filter(f -> !f.isAnnotationPresent(Ignore.class))

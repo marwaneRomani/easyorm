@@ -9,6 +9,7 @@ import org.orm.framework.ModelsMapper.Mappers.MapInheretedAttributes;
 import org.orm.framework.ModelsMapper.Mappers.MapNormalAttributes;
 import org.orm.framework.ModelsMapper.Mappers.MapRelations;
 import org.orm.framework.ModelsMapper.Mappers.ModelsLoader;
+import org.orm.framework.customException.ORMException;
 
 
 public class ModelsMapper {
@@ -36,8 +37,13 @@ public class ModelsMapper {
                 if (Modifier.isAbstract(model.getModifiers()))
                     entity.setAbstract(true);
 
-                MapNormalAttributes.mapModels(entity);
-                EntitiesDataSource
+               try {
+                   MapNormalAttributes.mapModels(entity);
+               } catch (ORMException e) {
+                   e.printStackTrace();
+                   throw new RuntimeException(e);
+               }
+               EntitiesDataSource
                         .getModelsSchemas()
                         .put(model.getSimpleName(), entity);
                 });
@@ -45,7 +51,6 @@ public class ModelsMapper {
     }
 
     private static void mapInheritedAttributes() {
-        //TODO inherited field have the same name of existing field => exception
         EntitiesDataSource
                 .getModelsSchemas()
                 .entrySet()

@@ -5,6 +5,7 @@ import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.AttributeList;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
+import org.orm.framework.customException.ORMException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +61,17 @@ public class MapInheretedAttributes {
                 clone = new AttributeList((AttributeList) a);
             else
                 clone = new Attribute(a);
+
+            entity.getNormalAttributes().stream().forEach(att -> {
+                if(att.getOriginalName().equals(a.getOriginalName())){
+                    try {
+                        throw new ORMException("inherited field '"+ a.getOriginalName() +"' have the same name of existing field");
+                    } catch (ORMException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
 
             clone.setName(a.getName());
             clone.setOriginalName(a.getOriginalName());

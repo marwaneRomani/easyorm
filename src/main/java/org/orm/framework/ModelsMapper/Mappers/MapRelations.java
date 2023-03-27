@@ -8,6 +8,7 @@ import org.orm.framework.ModelsMapper.FieldsMapper.Relation.ManyToMany;
 import org.orm.framework.ModelsMapper.FieldsMapper.Relation.OneToMany;
 import org.orm.framework.ModelsMapper.FieldsMapper.Relation.OneToOne;
 import org.orm.framework.ModelsMapper.FieldsMapper.Relation.Relation;
+import org.orm.framework.customException.ORMException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,13 @@ public class MapRelations {
                 .getRelationalAtrributes()
                 .forEach(a -> {
                     if (!a.isMapped()) {
-                        Relation relation = mapRelationBetweenAtrr(a);
+                        Relation relation = null;
+                        try {
+                            relation = mapRelationBetweenAtrr(a);
+                        } catch (ORMException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
                         entity.subscribeToRelationEvent(relation);
                         if (a instanceof AttributeList)
                             EntitiesDataSource.getModelsSchemas().get(
@@ -36,7 +43,7 @@ public class MapRelations {
     }
 
 
-    public static Relation mapRelationBetweenAtrr(Attribute attribute) {
+    public static Relation mapRelationBetweenAtrr(Attribute attribute) throws ORMException {
         attribute.mapp(true);
 
         String referencedEntity = (attribute instanceof AttributeList) ? ((AttributeList) attribute).getGenericType() : attribute.getType();
@@ -64,10 +71,9 @@ public class MapRelations {
 
         // exception
         Attribute first = mappedAttr.stream().findFirst().orElse(null);
-
-// TODO throw an exception if first is null
-//        if (first == null)
-//            throw new Exception();
+        if (first == null) {
+            throw new ORMException(referencedEntity + "________________" );
+        }
 
         first.mapp(true);
 
