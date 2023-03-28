@@ -30,7 +30,6 @@ public class ModelsMapper {
     }
 
     private static void mapNormalAttributes(List<Class<?>> models) {
-        // TODO no field && no parent => exception
         models
            .forEach((model) -> {
                 Entity entity = new Entity(model);

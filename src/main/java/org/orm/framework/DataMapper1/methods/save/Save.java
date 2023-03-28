@@ -1,6 +1,7 @@
 package org.orm.framework.DataMapper1.methods.save;
 
 import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
+import org.orm.framework.DataMapper1.Utils.SettersInvoke;
 import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.Utils.GettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
@@ -24,10 +25,6 @@ public class Save<T> {
                                              normalAttrQuery.getValues(),
                                              entity,
                                              objectToPersist);
-
-        if (entity.getPrimaryKey().isAutoIncrement()) {
-            //TODO INVOKE SETTER OF THE PRIMARY KEY
-        }
 
         for (Query query : saveRelations(entity, objectToPersist)) {
             template.nonQuery(query.getQuery(),

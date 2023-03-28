@@ -43,7 +43,7 @@ public class SettersInvoke {
                                             .toUpperCase() +
                                     primaryKey.getOriginalName()
                                             .substring(1),
-                            Class.forName("java.lang" + primaryKey.getType())
+                            Class.forName("java.lang." + primaryKey.getType())
                     );
             setterOfAttribute.invoke(object, newValue);
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {

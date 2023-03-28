@@ -75,4 +75,38 @@ public class MapResultSetValue {
         }
     }
 
+    public static Object getResultSetValue(PrimaryKey primaryKey, ResultSet resultSet, int rowCount) throws SQLException {
+        switch(primaryKey.getType()){
+            case "Boolean" :
+                return resultSet.getBoolean(rowCount);
+
+            case "Byte" :
+                return resultSet.getByte(rowCount);
+
+            case "Short" :
+                return resultSet.getShort(rowCount);
+
+            case "Integer":
+                return resultSet.getInt(rowCount);
+
+            case "Long" :
+                return resultSet.getLong(rowCount);
+
+            case "Float" :
+                return resultSet.getFloat(rowCount);
+
+            case "Double" :
+                return resultSet.getDouble(rowCount);
+
+            case "String":
+                return resultSet.getString(rowCount);
+
+            case "Date" :
+                return resultSet.getDate(rowCount);
+
+            default:
+                return null;
+        }
+    }
+
 }

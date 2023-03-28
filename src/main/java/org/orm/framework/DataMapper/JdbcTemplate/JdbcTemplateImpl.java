@@ -1,6 +1,7 @@
 package org.orm.framework.DataMapper.JdbcTemplate;
 
 
+import org.orm.framework.DataMapper1.Utils.SettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
@@ -91,24 +92,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public void nonQuery(String query, Object[] params, Entity entity, Object objectToPersiste) {
-        List<Object> autoIncrementFields = new ArrayList<>();
-        Map<Object, Object> autoIcrementsWithValue = new HashMap<>();
-
-
-        if(entity.getPrimaryKey().isAutoIncrement())
-            autoIncrementFields.add(entity.getPrimaryKey());
-
-        entity.getNormalAttributes().forEach(attribute -> {
-            if (attribute.isAutoIncrement()) {
-                autoIncrementFields.add(attribute);
-            }
-        });
-
+    public void nonQuery(String query, Object[] params, Entity entity, Object objectToPersist) {
         try {
             PreparedStatement ps = null;
 
-            if (!autoIncrementFields.isEmpty())
+            if (entity.getPrimaryKey().isAutoIncrement())
                 ps = connection.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
             else
                 ps = connection.prepareStatement(query);
@@ -117,10 +105,13 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
             int result = ps.executeUpdate();
 
-            if (!autoIncrementFields.isEmpty()) {
+            if (entity.getPrimaryKey().isAutoIncrement()) {
                 if (result > 0) {
                     ResultSet rs = ps.getGeneratedKeys();
-                    RowMapper.mapRows(rs, entity, objectToPersiste, autoIncrementFields, autoIcrementsWithValue);
+                    if(rs.next()) {
+                        Object autoIncrementValue = MapResultSetValue.getResultSetValue(entity.getPrimaryKey(),rs, 1);
+                        SettersInvoke.setPrimaryKey(entity.getPrimaryKey(), objectToPersist, autoIncrementValue);
+                    }
                 }
             }
 
