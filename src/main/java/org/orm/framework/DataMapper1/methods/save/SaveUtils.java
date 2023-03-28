@@ -1,6 +1,6 @@
 package org.orm.framework.DataMapper1.methods.save;
 
-import org.orm.framework.DataMapper.ObjectBuilders.Query;
+import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.QueryBuilders.InsertQueryBuilder;
 import org.orm.framework.DataMapper.QueryBuilders.UpdateQueryBuilder;
 import org.orm.framework.DataMapper.Utils.FindAttributeRelation;

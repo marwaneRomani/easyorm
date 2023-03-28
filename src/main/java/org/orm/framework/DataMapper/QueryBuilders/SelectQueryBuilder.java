@@ -1,6 +1,6 @@
 package org.orm.framework.DataMapper.QueryBuilders;
 
-import org.orm.framework.DataMapper.ObjectBuilders.Query;
+import org.orm.framework.DataMapper1.methods.Query;
 
 import java.util.*;
 import java.util.stream.Collectors;

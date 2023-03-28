@@ -60,7 +60,7 @@ public class MySQLDialect implements Dialect {
 
     @Override
     public String getDropTablesSyntax(List<String> tablesName) {
-        StringBuilder sb = new StringBuilder("DROP TABLE ");
+        StringBuilder sb = new StringBuilder("DROP TABLE IF EXISTS ");
         for (int i = 0; i < tablesName.size(); i++) {
             sb.append("`" + tablesName.get(i)).append("`");
             if (i < tablesName.size() - 1) {

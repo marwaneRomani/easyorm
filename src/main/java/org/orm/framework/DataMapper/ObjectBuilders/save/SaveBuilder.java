@@ -1,6 +1,6 @@
 package org.orm.framework.DataMapper.ObjectBuilders.save;
 
-import org.orm.framework.DataMapper.ObjectBuilders.Query;
+import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.Utils.GettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;

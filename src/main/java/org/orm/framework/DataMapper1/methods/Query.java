@@ -1,4 +1,4 @@
-package org.orm.framework.DataMapper.ObjectBuilders;
+package org.orm.framework.DataMapper1.methods;
 
 public class Query {
     private String query;

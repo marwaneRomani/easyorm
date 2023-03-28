@@ -42,7 +42,7 @@ public class RowMapper {
         while (resultSet.next()) {
             Object field = autoIncrementFields.get(rsCounter);
             Object value = null;
-            System.out.println(resultSet.getLong("idLong"));
+
             if (entity.getPrimaryKey().isAutoIncrement() && rsCounter == 0)
                 value = MapResultSetValue.getResultSetValue(entity.getPrimaryKey(),resultSet);
             else

@@ -1,5 +1,6 @@
 package org.orm.framework.TransactionsManager;
 
+import org.orm.framework.DataMapper1.methods.find.Find;
 import org.orm.framework.DataMapper1.methods.save.Save;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,5 +47,23 @@ public class Transaction {
             e.printStackTrace();
         }
     }
+
+    public static void wrapMethodInTransaction(Connection conn, Find findObject, Method method, Object ...args) {
+        try {
+            conn.setAutoCommit(false);
+
+            method.invoke(findObject, args);
+
+            conn.commit();
+        } catch (SQLException | InvocationTargetException | IllegalAccessException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    }
+
 
 }

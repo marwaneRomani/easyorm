@@ -13,9 +13,12 @@ public @Data class Filiere {
     private String description;
 
     private List<User> students;
+    private ChefFilliere chefFilliere;
 
     public Filiere(String nom, String description) {
         this.nom = nom;
         this.description = description;
     }
+
+
 }

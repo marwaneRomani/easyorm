@@ -1,13 +1,11 @@
 package org.orm.framework.DataMapper1.methods.save;
 
 import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
-import org.orm.framework.DataMapper.ObjectBuilders.Query;
+import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.Utils.GettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
-import org.orm.framework.TransactionsManager.Transaction;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,6 @@ public class Save<T> {
 
     public void save(Entity entity, T objectToPersist) {
 
-        // wrap in transaction
         Query normalAttrQuery = saveNormalAttr(entity, objectToPersist);
         template.nonQuery(normalAttrQuery.getQuery(),
                                              normalAttrQuery.getValues(),
@@ -29,7 +26,7 @@ public class Save<T> {
                                              objectToPersist);
 
         if (entity.getPrimaryKey().isAutoIncrement()) {
-            //Todo INVOKE SETTER OF THE PRIMARY KEY
+            //TODO INVOKE SETTER OF THE PRIMARY KEY
         }
 
         for (Query query : saveRelations(entity, objectToPersist)) {

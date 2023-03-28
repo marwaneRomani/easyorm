@@ -1,9 +1,7 @@
 package org.orm;
 
 import org.orm.framework.OrmApplication;
-import org.orm.models.Filiere;
-import org.orm.models.Post;
-import org.orm.models.User;
+import org.orm.models.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -13,11 +11,21 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        OrmApplication.run();
+
         Filiere gl = new Filiere("GL", "GL is the best option you can choose");
 
         OrmApplication
                 .buildObject(Filiere.class)
                 .save(gl);
+
+        ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", gl);
+
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(ibriz);
+
+
 
         Post post0 = new Post(1l, "HOW HTTP REQUEST HANDELED BY NODE", new Date());
         Post post1 = new Post(2l, "ANDROID CONSTRAINT LAYOUT", new Date());
@@ -34,8 +42,7 @@ public class Main {
                     .save(post);
         }
 
-        User user0 = new User("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0))
-        );
+        User user0 = new User("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
         User user1 = new User("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
         User user2 = new User("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
         User user3 = new User("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
@@ -51,6 +58,19 @@ public class Main {
                     .buildObject(User.class)
                     .save(user);
         }
+
+        Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,user1, user0);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message);
+
+        User userFounded = OrmApplication
+                .buildObject(User.class)
+                .findOne("name", "Marwane")
+                .build();
+
+        System.out.println(userFounded);
     }
 }
 
