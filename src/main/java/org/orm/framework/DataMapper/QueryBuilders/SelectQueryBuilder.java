@@ -8,7 +8,15 @@ import java.util.stream.Collectors;
 public class SelectQueryBuilder {
     private List<String> tables = new ArrayList<>();
     private List<String> columns = new ArrayList<>();
-    private Map<String, Object> conditions = new HashMap<>();
+
+    private List<String> equalConditions = new ArrayList<>();
+    private List<String> notEqualConditions = new ArrayList<>();
+    private List<String> greaterThenConditions = new ArrayList<>();
+    private List<String> lessThenConditions = new ArrayList<>();
+
+    private List<Object> conditions = new ArrayList<>();
+
+    private Integer limit;
     private String orderBy;
 
     public SelectQueryBuilder setTable(String table) {
@@ -21,18 +29,42 @@ public class SelectQueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder addCondition(String condition, Object value) {
-        conditions.put(condition, value);
+    public SelectQueryBuilder addEqualCondition(String condition, Object value) {
+        equalConditions.add(condition);
+        conditions.add(value);
         return this;
     }
+
+    public SelectQueryBuilder addNotEqualCondition(String condition, Object value) {
+        notEqualConditions.add(condition);
+        conditions.add(value);
+        return this;
+    }
+    public SelectQueryBuilder addGreaterThenCondition(String condition, Object value) {
+        greaterThenConditions.add(condition);
+        conditions.add(value);
+        return this;
+    }
+    public SelectQueryBuilder addLessThenCondition(String condition, Object value) {
+        lessThenConditions.add(condition);
+        conditions.add(value);
+        return this;
+    }
+
 
     public SelectQueryBuilder setOrderBy(String orderBy) {
         this.orderBy = orderBy;
         return this;
     }
 
+    public SelectQueryBuilder setLimit(Integer limit) {
+        this.limit = limit;
+        return this;
+    }
+
+
     public Query build() {
-        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, conditions, orderBy);
+        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, equalConditions, notEqualConditions, greaterThenConditions, lessThenConditions, conditions ,limit,orderBy);
         String sql = queryBuilder.toSql();
         Object[] values = queryBuilder.getValues();
 
@@ -42,13 +74,26 @@ public class SelectQueryBuilder {
     public class QueryBuilder {
         private List<String> tables;
         private List<String> columns;
-        private Map<String, Object> conditions;
+
+        private List<String> equalConditions;
+        private List<String> notEqualConditions;
+        private List<String> greaterThenConditions ;
+        private List<String> lessThenConditions;
+
+        private List<Object> conditions;
+
+        private Integer limit;
         private String orderBy;
 
-        public QueryBuilder(List<String> tables, List<String> columns, Map<String, Object> conditions, String orderBy) {
+        public QueryBuilder(List<String> tables, List<String> columns, List<String> equalConditions, List<String> notEqualConditions, List<String> greaterThenConditions, List<String> lessThenConditions,List<Object> conditions ,Integer limit, String orderBy) {
             this.tables = tables;
             this.columns = columns;
+            this.equalConditions = equalConditions;
+            this.notEqualConditions = notEqualConditions;
+            this.greaterThenConditions = greaterThenConditions;
+            this.lessThenConditions = lessThenConditions;
             this.conditions = conditions;
+            this.limit = limit;
             this.orderBy = orderBy;
         }
 
@@ -65,12 +110,39 @@ public class SelectQueryBuilder {
             builder.append(" FROM ");
             builder.append(String.join(",", tables));
 
-            if (!conditions.isEmpty()) {
-                builder.append(" WHERE ");
-                builder.append(conditions.entrySet().stream()
-                        .map(entry -> entry.getKey() + " = ?")
+            if (!equalConditions.isEmpty() || !notEqualConditions.isEmpty() || !greaterThenConditions.isEmpty() || !lessThenConditions.isEmpty())
+                    builder.append(" WHERE ");
+
+
+            if (!equalConditions.isEmpty()) {
+                builder.append(equalConditions.stream()
+                        .map(condition -> condition  + " LIKE ?")
                         .collect(Collectors.joining(" AND ")));
             }
+
+            if (!notEqualConditions.isEmpty()) {
+                builder.append(notEqualConditions.stream()
+                        .map(condition -> condition  + " <> ?")
+                        .collect(Collectors.joining(" AND ")));
+            }
+
+            if (!greaterThenConditions.isEmpty()) {
+                builder.append(greaterThenConditions.stream()
+                        .map(condition -> condition  + " > ?")
+                        .collect(Collectors.joining(" AND ")));
+            }
+
+            if (!lessThenConditions.isEmpty()) {
+                builder.append(lessThenConditions.stream()
+                        .map(condition -> condition  + " < ?")
+                        .collect(Collectors.joining(" AND ")));
+            }
+
+
+            if (limit != null) {
+                builder.append(" LIMIT ? ");
+            }
+
 
             if (orderBy != null) {
                 builder.append(" ORDER BY ");
@@ -81,9 +153,9 @@ public class SelectQueryBuilder {
         }
 
         public Object[] getValues() {
-            List<Object> values = new ArrayList<>();
-            conditions.forEach((cond, val) -> values.add(val));
-            return values.toArray();
+            if (this.limit != null)
+                conditions.add(limit);
+            return conditions.toArray();
         }
     }
 }

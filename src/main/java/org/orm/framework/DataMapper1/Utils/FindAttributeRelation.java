@@ -5,13 +5,14 @@ import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.AttributeList;
 import org.orm.framework.ModelsMapper.FieldsMapper.Relation.Relation;
+import org.orm.framework.customException.ORMException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FindAttributeRelation {
-    public static Relation find(Attribute attribute, Entity entity) {
+    public static Relation find(Attribute attribute, Entity entity) throws ORMException {
         List<Relation> relationList = new ArrayList<>();
 
         relationList = entity
@@ -33,7 +34,11 @@ public class FindAttributeRelation {
 
         Relation relation = relationList.stream()
                 .findFirst()
-                .get();
+                .orElse(null);
+
+        if (relation == null)
+            throw new ORMException("No attribute named " + attribute.getName()  + " in the table " + entity.getName());
+
 
         return relation;
     }

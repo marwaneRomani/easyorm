@@ -2,15 +2,14 @@ package org.orm.framework.DataMapper;
 
 import org.orm.framework.ApplicationState.ApplicationState;
 import org.orm.framework.ConnectionsPool.ConnectionPool;
-import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
-import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplateImpl;
+import org.orm.framework.DataMapper1.JdbcTemplate.JdbcTemplate;
+import org.orm.framework.DataMapper1.JdbcTemplate.JdbcTemplateImpl;
 import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.ObjectBuilders.find.FindBuilder;
 import org.orm.framework.DataMapper.ObjectBuilders.find.RelationEvaluator;
 import org.orm.framework.DataMapper.ObjectBuilders.save.SaveBuilder;
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
 import org.orm.framework.EntitiesDataSource.Entity;
-import org.orm.framework.customException.ORMException;
 
 import java.sql.Connection;
 import java.sql.SQLException;

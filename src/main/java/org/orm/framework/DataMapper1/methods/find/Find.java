@@ -1,12 +1,10 @@
 package org.orm.framework.DataMapper1.methods.find;
 
-import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
-import org.orm.framework.DataMapper.QueryBuilders.SelectQueryBuilder;
+import org.orm.framework.DataMapper1.JdbcTemplate.JdbcTemplate;
 import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.EntitiesDataSource.Entity;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class Find<T> {
@@ -39,15 +37,26 @@ public class Find<T> {
         }
     }
 
-    public T findOne(Entity entity, List<String> keys, List<Object> values) {
-        Query findByIdQuery = findUtils.findOne(entity, keys, values);
-
+    public T findOne(Entity entity, List<String> keys,List<String> conditionTypes , List<Object> values) {
+        Query findQuery = findUtils.find(entity, keys, conditionTypes, values);
+        // TODO limit to one result
         try {
-            return (T) template.queryForObject(findByIdQuery.getQuery(),entity, findByIdQuery.getValues());
+            return (T) template.queryForObject(findQuery.getQuery(),entity, findQuery.getValues());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    public List<T> findMany(Entity entity, List<String> keys,List<String> conditionTypes ,List<Object> values) {
+        Query findQuery = findUtils.find(entity, keys, conditionTypes ,values);
+
+        try {
+            return (List<T>) template.queryForList(findQuery.getQuery(), entity,findQuery.getValues());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }

@@ -1,13 +1,10 @@
-package org.orm.framework.DataMapper.JdbcTemplate;
+package org.orm.framework.DataMapper1.JdbcTemplate;
 
 
 import org.orm.framework.DataMapper1.Utils.SettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
-import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
-import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
 
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
 
 public class JdbcTemplateImpl implements JdbcTemplate {
@@ -56,13 +53,13 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public List<Object> queryForList(String query, Object[] params, Entity entity) throws SQLException {
+    public List<Object> queryForList(String query, Entity entity,Object[] params ) throws Exception {
         List<Object> objects = new ArrayList<>();
 
         ResultSet resultSet = this.query(query, params);
 
         while (resultSet.next()) {
-            objects.add(this.mapResultToObject(resultSet, entity));
+            objects.add(RowMapper.mapRows(resultSet, entity));
         }
 
         return objects;
@@ -84,6 +81,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
                 ResultSet resultSet = ps.executeQuery();
 
+
                 return  resultSet;
             }
         } catch (SQLException e) {
@@ -100,6 +98,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 ps = connection.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
             else
                 ps = connection.prepareStatement(query);
+
             if (params != null)
                 fillPreparedStatement(ps,params);
 

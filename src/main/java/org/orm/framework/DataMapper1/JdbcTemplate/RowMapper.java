@@ -1,24 +1,30 @@
-package org.orm.framework.DataMapper.JdbcTemplate;
+package org.orm.framework.DataMapper1.JdbcTemplate;
 
 
-import lombok.SneakyThrows;
 import org.orm.framework.DataMapper1.Utils.SettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RowMapper {
     public static Object mapRows(ResultSet resultSet, Entity entity) throws Exception {
         Object object = Class.forName(entity.getModel().getName()).newInstance();
+
+        // Set the primary key
+        try {
+            SettersInvoke.setPrimaryKey(entity.getPrimaryKey(),
+                    object,
+                    (MapResultSetValue.getResultSetValue(entity.getPrimaryKey(), resultSet))
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         entity.getNormalAttributes()
               .stream()
               .forEach(attribute -> {

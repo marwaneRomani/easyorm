@@ -1,7 +1,6 @@
 package org.orm.framework.DataMapper1.methods.save;
 
-import org.orm.framework.DataMapper.JdbcTemplate.JdbcTemplate;
-import org.orm.framework.DataMapper1.Utils.SettersInvoke;
+import org.orm.framework.DataMapper1.JdbcTemplate.JdbcTemplate;
 import org.orm.framework.DataMapper1.methods.Query;
 import org.orm.framework.DataMapper.Utils.GettersInvoke;
 import org.orm.framework.EntitiesDataSource.Entity;

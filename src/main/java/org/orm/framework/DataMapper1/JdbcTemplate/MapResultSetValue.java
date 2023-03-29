@@ -1,4 +1,4 @@
-package org.orm.framework.DataMapper.JdbcTemplate;
+package org.orm.framework.DataMapper1.JdbcTemplate;
 
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;

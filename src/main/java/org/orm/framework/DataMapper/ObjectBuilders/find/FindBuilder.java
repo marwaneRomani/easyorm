@@ -16,7 +16,7 @@ public class FindBuilder {
 
         selectQueryBuilder.setTable(entity.getName());
         entity.getNormalAttributes().forEach(attribute -> selectQueryBuilder.addColumn(attribute.getName()));
-        selectQueryBuilder.addCondition(entity.getPrimaryKey().getName(), id);
+        selectQueryBuilder.addEqualCondition(entity.getPrimaryKey().getName(), id);
 
         Query query = selectQueryBuilder.build();
 
@@ -39,7 +39,7 @@ public class FindBuilder {
 
         selectQueryBuilder.setTable(entity.getName());
         selectQueryBuilder.addColumn(attributeName);
-        selectQueryBuilder.addCondition(entity.getPrimaryKey().getName(), value);
+        selectQueryBuilder.addEqualCondition(entity.getPrimaryKey().getName(), value);
 
         Query query = selectQueryBuilder.build();
 
@@ -60,7 +60,7 @@ public class FindBuilder {
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
         selectQueryBuilder.setTable(entity.getName());
         entity.getNormalAttributes().forEach(attribute -> selectQueryBuilder.addColumn(attribute.getName()));
-        selectQueryBuilder.addCondition(condition, value);
+        selectQueryBuilder.addEqualCondition(condition, value);
 
         Query query = selectQueryBuilder.build();
 
@@ -75,7 +75,7 @@ public class FindBuilder {
         entity.getNormalAttributes().forEach(attribute -> selectQueryBuilder.addColumn(attribute.getName()));
 
         for (int i = 0; i < conditions.getContions().length; i++) {
-            selectQueryBuilder.addCondition(conditions.getContions()[i], conditions.getValues()[i]);
+            selectQueryBuilder.addEqualCondition(conditions.getContions()[i], conditions.getValues()[i]);
         }
 
         Query query = selectQueryBuilder.build();

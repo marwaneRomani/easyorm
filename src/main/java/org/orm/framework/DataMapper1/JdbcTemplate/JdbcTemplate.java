@@ -1,4 +1,4 @@
-package org.orm.framework.DataMapper.JdbcTemplate;
+package org.orm.framework.DataMapper1.JdbcTemplate;
 
 
 
@@ -13,7 +13,7 @@ public interface JdbcTemplate {
     Object queryForObject(String sql, Entity entity, Object[] params);
 
     List<Object> queryForList(String sql, Entity entity) throws Exception;
-    List<Object> queryForList(String sql, Object[] params, Entity entity) throws SQLException;
+    List<Object> queryForList(String sql, Entity entity, Object[] params) throws SQLException, Exception;
 
     void nonQuery(String query, Object[] params, Entity entity,Object objectToPersiste);
 }
