@@ -84,6 +84,7 @@ public class SelectQueryBuilder {
 
         private Integer limit;
         private String orderBy;
+        private Boolean flag = false;
 
         public QueryBuilder(List<String> tables, List<String> columns, List<String> equalConditions, List<String> notEqualConditions, List<String> greaterThenConditions, List<String> lessThenConditions,List<Object> conditions ,Integer limit, String orderBy) {
             this.tables = tables;
@@ -115,27 +116,36 @@ public class SelectQueryBuilder {
 
 
             if (!equalConditions.isEmpty()) {
+                addAndToQuery(builder);
                 builder.append(equalConditions.stream()
                         .map(condition -> condition  + " LIKE ?")
                         .collect(Collectors.joining(" AND ")));
+
+                flag=true;
             }
 
             if (!notEqualConditions.isEmpty()) {
+                addAndToQuery(builder);
                 builder.append(notEqualConditions.stream()
                         .map(condition -> condition  + " <> ?")
                         .collect(Collectors.joining(" AND ")));
+                flag=true;
             }
 
             if (!greaterThenConditions.isEmpty()) {
+                addAndToQuery(builder);
                 builder.append(greaterThenConditions.stream()
                         .map(condition -> condition  + " > ?")
                         .collect(Collectors.joining(" AND ")));
+                flag=true;
             }
 
             if (!lessThenConditions.isEmpty()) {
+                addAndToQuery(builder);
                 builder.append(lessThenConditions.stream()
                         .map(condition -> condition  + " < ?")
                         .collect(Collectors.joining(" AND ")));
+                flag=true;
             }
 
 
@@ -156,6 +166,12 @@ public class SelectQueryBuilder {
             if (this.limit != null)
                 conditions.add(limit);
             return conditions.toArray();
+        }
+        private void addAndToQuery(StringBuilder stringBuilder) {
+            if (flag){
+                stringBuilder.append(" AND ");
+                flag = false;
+            }
         }
     }
 }
