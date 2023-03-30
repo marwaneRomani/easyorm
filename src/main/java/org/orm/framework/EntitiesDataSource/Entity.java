@@ -21,7 +21,7 @@ public class Entity {
     private List<Attribute> relationalAtrributes ;
     private List<Relation> relations;
     private List<Relation> unsavedRelationalAttributes;
-
+    // Todo list attribute fk
     public Entity(Class<?> model) {
         relations = new ArrayList<>();
         unsavedRelationalAttributes = new ArrayList<>();

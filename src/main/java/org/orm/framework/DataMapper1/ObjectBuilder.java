@@ -118,7 +118,7 @@ public class ObjectBuilder<T> {
         List<Object> values = new ArrayList<>();
         List<String> chain = new ArrayList<>(); // and || or
 
-        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder(this, "one" , keys, conditionTypes, values, chain);
+        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder(this, "one" , keys, conditionTypes, values, chain, 0);
 
         return searchQueryBuilder;
     }
@@ -128,8 +128,8 @@ public class ObjectBuilder<T> {
         List<String> conditionTypes = new ArrayList<>();
         List<Object> values = new ArrayList<>();
         List<String> chain = new ArrayList<>();
-
-        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder(this, "many" , keys, conditionTypes, values, chain);
+        Integer limit = new Integer(0);
+        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder(this, "many" , keys, conditionTypes, values, chain, limit);
 
         return searchQueryBuilder;
     }
@@ -151,7 +151,7 @@ public class ObjectBuilder<T> {
     }
 
 
-    private void executeFindMany(List<String> keys, List<String> conditionTypes, List<Object> values, List<String> chain) throws ORMException, SQLException {
+    private void executeFindMany(List<String> keys, List<String> conditionTypes, List<Object> values, List<String> chain, Integer limit) throws ORMException, SQLException {
         if (keys == null || conditionTypes == null || values == null || chain == null) {
             throw new ORMException("All search parameters are required and cannot be null.");
         }
@@ -161,7 +161,7 @@ public class ObjectBuilder<T> {
 
         Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
-        objects = findObject.findMany(entity, keys, conditionTypes ,values, chain);
+        objects = findObject.findMany(entity, keys, conditionTypes ,values, chain, limit);
 
         pool.releaseConnection(connection);
     }
@@ -219,15 +219,16 @@ public class ObjectBuilder<T> {
         private List<String> conditionTypes;
         private List<Object> values;
         private List<String> chain;
+        private Integer limit;
 
-
-        public SearchQueryBuilder(ObjectBuilder<T> builder, String manyOrOne ,List<String> keys, List<String> conditionTypes, List<Object> values, List<String> chain) {
+        public SearchQueryBuilder(ObjectBuilder<T> builder, String manyOrOne ,List<String> keys, List<String> conditionTypes, List<Object> values, List<String> chain, Integer limit) {
             this.builder = builder;
             this.manyOrOne = manyOrOne;
             this.keys = keys;
             this.conditionTypes = conditionTypes;
             this.values = values;
             this.chain = chain;
+            this.limit = limit;
         }
 
         public SearchQueryBuilder where(String field, String operator, Object value) {
@@ -280,12 +281,17 @@ public class ObjectBuilder<T> {
             return this;
         }
 
+        public SearchQueryBuilder limit(Integer value) {
+            limit = value;
+            return this;
+        }
+
         public ObjectBuilder<T> execute() {
             try {
                 if (manyOrOne.equals("one"))
                     builder.executeFindOne(keys, conditionTypes, values, chain);
                 else
-                    builder.executeFindMany(keys, conditionTypes, values, chain);
+                    builder.executeFindMany(keys, conditionTypes, values, chain, limit);
                 return builder;
 
             } catch (ORMException | SQLException e) {

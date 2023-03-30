@@ -38,8 +38,7 @@ public class Find<T> {
     }
 
     public T findOne(Entity entity, List<String> keys, List<String> conditionTypes , List<Object> values, List<String> chain) {
-        Query findQuery = findUtils.find(entity, keys, conditionTypes, values, chain);
-        // TODO limit to one result
+        Query findQuery = findUtils.find(entity, keys, conditionTypes, values, chain, 0);
         try {
             return (T) template.queryForObject(findQuery.getQuery(),entity, findQuery.getValues());
         } catch (Exception e) {
@@ -47,8 +46,8 @@ public class Find<T> {
         }
     }
 
-    public List<T> findMany(Entity entity, List<String> keys,List<String> conditionTypes ,List<Object> values, List<String> chain) {
-        Query findQuery = findUtils.find(entity, keys, conditionTypes ,values, chain);
+    public List<T> findMany(Entity entity, List<String> keys,List<String> conditionTypes ,List<Object> values, List<String> chain, Integer limit) {
+        Query findQuery = findUtils.find(entity, keys, conditionTypes ,values, chain, limit);
 
         try {
             return (List<T>) template.queryForList(findQuery.getQuery(), entity,findQuery.getValues());

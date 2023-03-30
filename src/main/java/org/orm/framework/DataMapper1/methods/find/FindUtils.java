@@ -41,7 +41,7 @@ public class FindUtils<T> {
         return query;
     }
 
-    public Query find(Entity entity, List<String> keys, List<String> conditionTypes , List<Object> values, List<String> chains) {
+    public Query find(Entity entity, List<String> keys, List<String> conditionTypes , List<Object> values, List<String> chains, Integer limit) {
 
         SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
 
@@ -51,43 +51,38 @@ public class FindUtils<T> {
         selectQueryBuilder.addColumn(entity.getPrimaryKey().getName());
 
         entity.getNormalAttributes().forEach(attribute -> selectQueryBuilder.addColumn(attribute.getName()));
-
+        if (limit != 0) {
+            selectQueryBuilder.setLimit(limit);
+        }
         for (int i = 0; i < keys.size(); i++) {
+            String condition = conditionTypes.get(i);
 
-            if (keys.get(i).equalsIgnoreCase("limit")) {
-                selectQueryBuilder.setLimit((Integer) values.get(i));
+            String chainingOperator = null;
+
+
+            if (i < keys.size() - 1) {
+                chainingOperator= chains.get(i);
             }
-            else {
 
-                String condition = conditionTypes.get(i);
+            if (condition.equalsIgnoreCase("equals") || condition.equalsIgnoreCase("=") || condition.toLowerCase().equals("like")) {
+                selectQueryBuilder.addEqualCondition(keys.get(i), values.get(i));
 
-                String chainingOperator = null;
-
-
-                if (i < keys.size() - 1) {
-                    chainingOperator= chains.get(i);
-                }
-
-                if (condition.equalsIgnoreCase("equals") || condition.equalsIgnoreCase("=") || condition.toLowerCase().equals("like")) {
-                    selectQueryBuilder.addEqualCondition(keys.get(i), values.get(i));
-
-                    if (chainingOperator != null)
-                        selectQueryBuilder.addChainOperation(chainingOperator);
-                }
-
-                else if (condition.equalsIgnoreCase("different") || condition.equalsIgnoreCase("<>") || condition.equalsIgnoreCase("not equals")) {
-                    selectQueryBuilder.addNotEqualCondition(keys.get(i), values.get(i));
+                if (chainingOperator != null)
                     selectQueryBuilder.addChainOperation(chainingOperator);
-                }
+            }
 
-                else if (condition.equalsIgnoreCase("greater then") || condition.equalsIgnoreCase(">") ) {
-                    selectQueryBuilder.addGreaterThenCondition(keys.get(i), values.get(i));
-                    selectQueryBuilder.addChainOperation(chainingOperator);
-                }
-                else if (condition.equalsIgnoreCase("less then") || condition.equalsIgnoreCase("<")) {
-                    selectQueryBuilder.addLessThenCondition(keys.get(i), values.get(i));
-                    selectQueryBuilder.addChainOperation(chainingOperator);
-                }
+            else if (condition.equalsIgnoreCase("different") || condition.equalsIgnoreCase("<>") || condition.equalsIgnoreCase("not equals")) {
+                selectQueryBuilder.addNotEqualCondition(keys.get(i), values.get(i));
+                selectQueryBuilder.addChainOperation(chainingOperator);
+            }
+
+            else if (condition.equalsIgnoreCase("greater then") || condition.equalsIgnoreCase(">") ) {
+                selectQueryBuilder.addGreaterThenCondition(keys.get(i), values.get(i));
+                selectQueryBuilder.addChainOperation(chainingOperator);
+            }
+            else if (condition.equalsIgnoreCase("less then") || condition.equalsIgnoreCase("<")) {
+                selectQueryBuilder.addLessThenCondition(keys.get(i), values.get(i));
+                selectQueryBuilder.addChainOperation(chainingOperator);
             }
         }
 
