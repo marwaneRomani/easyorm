@@ -15,15 +15,15 @@ public class Main {
 
         Filiere gl = new Filiere("GL", "GL is the best option you can choose");
 
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .save(gl);
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(gl);
 
         ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", gl);
 
-//        OrmApplication
-//                .buildObject(ChefFilliere.class)
-//                .save(ibriz);
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(ibriz);
 
 
 
@@ -36,11 +36,11 @@ public class Main {
         posts.add(post1);
         posts.add(post2);
 
-//        for (Post post : posts) {
-//            OrmApplication
-//                    .buildObject(Post.class)
-//                    .save(post);
-//        }
+        for (Post post : posts) {
+            OrmApplication
+                    .buildObject(Post.class)
+                    .save(post);
+        }
 
         User user0 = new User("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
         User user1 = new User("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
@@ -53,17 +53,17 @@ public class Main {
         users.add(user2);
         users.add(user3);
 
-//        for (User user : users) {
-//            OrmApplication
-//                    .buildObject(User.class)
-//                    .save(user);
-//        }
+        for (User user : users) {
+            OrmApplication
+                    .buildObject(User.class)
+                    .save(user);
+        }
 
         Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,user1, user0);
 
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message);
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message);
 
 
         SubCommentaire springFramework = new SubCommentaire();
@@ -71,12 +71,12 @@ public class Main {
         springFramework.setDate(new Date());
         springFramework.setUser(user1);
 
-//        SubCommentaire springFrameworkPersisted = OrmApplication
-//                .buildObject(SubCommentaire.class)
-//                .save(springFramework);
-//
-//        System.out.println(springFrameworkPersisted + "  springFrameworkPersisted)");
-//        System.out.println(springFramework+"  springFramework");
+        SubCommentaire springFrameworkPersisted = OrmApplication
+                .buildObject(SubCommentaire.class)
+                .save(springFramework);
+
+        System.out.println(springFrameworkPersisted + "  springFrameworkPersisted)");
+        System.out.println(springFramework+"  springFramework");
 
 
         User user = OrmApplication
@@ -85,24 +85,27 @@ public class Main {
                     .where("age", "<>", 30)
                     .and("name", "=", "Marwane")
                     .and("cin", "=", "134794630")
-                    .or("cin", "=", "1234567")
                     .execute()
                     .buildObject();
 
-        System.out.println("hahahhahahhahahhhhahahahahahaa");
         System.out.println(user);
 
         List<User> users1 = OrmApplication
                 .buildObject(User.class)
                 .findMany()
-                .where("age", "equals", 20)
-                .or("name", "=", "Marwane")
-                .limit(1)
+                .where("age", "equals", 30)
+                .or("name", "like", "%ane")
+                .and("filiere", "<>", "GL")
                 .execute()
                 .buildObjects();
-//
-//        System.out.println("hahahahhahhhahahahhahahahahha");
+
         System.out.println(users1);
+
+        OrmApplication
+                .buildObject(Filiere.class)
+                .findById("GL")
+                .findAll()
+                .get("students");
     }
 
 }

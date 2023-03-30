@@ -56,8 +56,8 @@ public class ModelsMapper {
                 .stream()
                 .filter(entity -> entity.getValue().getSupperClass() != Object.class)
                 .forEach(entity -> MapInheretedAttributes.mapInheritance(entity.getValue()));
-
     }
+
     private static void mapRelations() {
         EntitiesDataSource
                 .getModelsSchemas()

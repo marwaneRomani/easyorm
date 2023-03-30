@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MapRelations {
+    private static Entity entity;
     private MapRelations() { };
 
     public static void mapRelations(Entity entity) {
+            MapRelations.entity = entity;
 
             entity
                 .getRelationalAtrributes()
@@ -69,10 +71,10 @@ public class MapRelations {
                 })
                 .collect(Collectors.toList());
 
-        // exception
+
         Attribute first = mappedAttr.stream().findFirst().orElse(null);
         if (first == null) {
-            throw new ORMException(referencedEntity + "________________" );
+            throw new ORMException("the mapping relation of this attribute was not set in " +  referencedEntity);
         }
 
         first.mapp(true);
@@ -85,14 +87,26 @@ public class MapRelations {
                         first.getName().compareTo(attribute.getName()) <= 0 ? first : attribute ,
                         attribute.getName().compareTo(first.getName()) > 0 ? attribute : first
                 );
-            else
+            else {
                 relation = new OneToMany(first, (AttributeList) attribute);
+                // register the first attribute as fk of the table
+                EntitiesDataSource
+                        .getModelsSchemas()
+                        .get(referencedEntity)
+                        .setForeignKey(first);
+            }
 
         else
-        if ( first instanceof AttributeList )
-            relation = new OneToMany(attribute, (AttributeList) first);
-        else
-            relation = new OneToOne(attribute, first);
+            if ( first instanceof AttributeList ) {
+                relation = new OneToMany(attribute, (AttributeList) first);
+                // register the first attribute as fk of the table
+                entity.setForeignKey(attribute);
+            }
+            else {
+                relation = new OneToOne(attribute, first);
+                // register the first attribute as fk of the table
+                entity.setForeignKey(attribute);
+            }
 
 
         if (!attribute.getHeritant().isEmpty())

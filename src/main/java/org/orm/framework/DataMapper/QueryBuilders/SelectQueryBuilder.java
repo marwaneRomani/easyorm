@@ -14,6 +14,7 @@ public class SelectQueryBuilder {
 
     private enum ConditionType {
         EQUAL,
+        LIKE,
         NOTEQUAL,
         GREATERTHEN,
         LESSTHEN,
@@ -45,6 +46,15 @@ public class SelectQueryBuilder {
         conditionsValues.add(value);
         return this;
     }
+
+    public SelectQueryBuilder addLikeCondition(String condition, Object value) {
+        //equalConditions.add(condition);
+        conditions.add(condition);
+        conditionsType.add(ConditionType.LIKE);
+        conditionsValues.add(value);
+        return this;
+    }
+
 
     public SelectQueryBuilder addNotEqualCondition(String condition, Object value) {
         //notEqualConditions.add(condition);
@@ -148,10 +158,14 @@ public class SelectQueryBuilder {
                     ConditionType conditionType = conditionTypes.get(i);
 
                     if (conditionType.equals(ConditionType.EQUAL)) {
-                            builder.append(condition  + " LIKE ? ");
+                            builder.append(condition  + " = ? ");
                             chainConditionsFLag = true;
-                    }
-                    else if (conditionType.equals(ConditionType.NOTEQUAL)) {
+                    } else if (conditionType.equals(ConditionType.LIKE)) {
+                        //TODO REFACTOR THE LIKE SYNTAX BASED ON DBMS
+                        builder.append(condition  + " LIKE ? ");
+                        chainConditionsFLag = true;
+
+                    } else if (conditionType.equals(ConditionType.NOTEQUAL)) {
                         builder.append(condition  + " <> ? ");
                         chainConditionsFLag = true;
                     }

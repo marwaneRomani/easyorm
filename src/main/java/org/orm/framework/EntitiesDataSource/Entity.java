@@ -20,11 +20,13 @@ public class Entity {
     private List<Attribute> normalAttributes;
     private List<Attribute> relationalAtrributes ;
     private List<Relation> relations;
-    private List<Relation> unsavedRelationalAttributes;
-    // Todo list attribute fk
+    private List<Relation> unsavedRelationalAttributes; // relation that their relation was saved in other entity
+    private List<Attribute> foreignKeys; // list of attributes that will be a fk in the database table
+
     public Entity(Class<?> model) {
         relations = new ArrayList<>();
         unsavedRelationalAttributes = new ArrayList<>();
+        foreignKeys = new ArrayList<>();
         this.model = model;
         this.isAbstract = false;
     }
@@ -84,16 +86,22 @@ public class Entity {
     public List<Relation> getUnsavedRelationalAttributes() { return unsavedRelationalAttributes; }
     public void setUnsavedRelationalAttributes(List<Relation> unsavedRelationalAttributes) { this.unsavedRelationalAttributes = unsavedRelationalAttributes; }
 
+
+    public List<Attribute> getForeignKeys() { return foreignKeys; }
+    public void setForeignKey(Attribute foreignKey) { this.foreignKeys.add(foreignKey); }
+
+
+
     public void addNormalInheritedAttr(Attribute a) { this.normalAttributes.add(a);}
     public void addRelationalInheritedAttr(Attribute a) { this.relationalAtrributes.add(a); }
 
 
 
-    // need to refactor
+    //TODO need to refactor
     public void subscribeToRelationEvent(Relation relation) { relations.add(relation); }
 
 
-    // need to refactor
+    //TODO need to refactor
     public void subscribeToRelationEvent(Attribute notifier,Attribute other) {
         Attribute a;
         Attribute f;
@@ -132,6 +140,11 @@ public class Entity {
             }
             else {
                 r = new OneToMany(f ,(AttributeList) a);
+                // register the first attribute as fk of the table
+                EntitiesDataSource
+                        .getModelsSchemas()
+                        .get(f.getClazz().getSimpleName())
+                        .setForeignKey(f);
             }
         }
         else {
@@ -154,9 +167,21 @@ public class Entity {
             if ( other instanceof AttributeList ) {
                 ((AttributeList) f).setGenericType(this.model.getSimpleName());
                 r = new OneToMany(a, (AttributeList) f);
+                // register the first attribute as fk of the table
+                EntitiesDataSource
+                        .getModelsSchemas()
+                        .get(a.getClazz().getSimpleName())
+                        .setForeignKey(a);
             }
             else {
                 r = new OneToOne(f,a);
+
+                // register the first attribute as fk of the table
+                EntitiesDataSource
+                        .getModelsSchemas()
+                        .get(f.getClazz().getSimpleName())
+                        .setForeignKey(f);
+
             }
         }
 

@@ -64,25 +64,35 @@ public class FindUtils<T> {
                 chainingOperator= chains.get(i);
             }
 
-            if (condition.equalsIgnoreCase("equals") || condition.equalsIgnoreCase("=") || condition.toLowerCase().equals("like")) {
+            if (condition.equalsIgnoreCase("equals") || condition.equalsIgnoreCase("=") ) {
                 selectQueryBuilder.addEqualCondition(keys.get(i), values.get(i));
 
                 if (chainingOperator != null)
                     selectQueryBuilder.addChainOperation(chainingOperator);
             }
+            else if (condition.toLowerCase().equals("like")) {
+                selectQueryBuilder.addLikeCondition(keys.get(i), values.get(i));
 
+                if (chainingOperator != null)
+                    selectQueryBuilder.addChainOperation(chainingOperator);
+
+            }
             else if (condition.equalsIgnoreCase("different") || condition.equalsIgnoreCase("<>") || condition.equalsIgnoreCase("not equals")) {
                 selectQueryBuilder.addNotEqualCondition(keys.get(i), values.get(i));
-                selectQueryBuilder.addChainOperation(chainingOperator);
+                if (chainingOperator != null)
+                    selectQueryBuilder.addChainOperation(chainingOperator);
             }
 
             else if (condition.equalsIgnoreCase("greater then") || condition.equalsIgnoreCase(">") ) {
                 selectQueryBuilder.addGreaterThenCondition(keys.get(i), values.get(i));
-                selectQueryBuilder.addChainOperation(chainingOperator);
+                if (chainingOperator != null)
+                    selectQueryBuilder.addChainOperation(chainingOperator);
             }
             else if (condition.equalsIgnoreCase("less then") || condition.equalsIgnoreCase("<")) {
                 selectQueryBuilder.addLessThenCondition(keys.get(i), values.get(i));
-                selectQueryBuilder.addChainOperation(chainingOperator);
+
+                if (chainingOperator != null)
+                    selectQueryBuilder.addChainOperation(chainingOperator);
             }
         }
 

@@ -83,6 +83,7 @@ public class ObjectBuilder<T> {
             Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
             this.objects = findObject.findAll(entity);
+            this.object = null;
 
             pool.releaseConnection(connection);
 
@@ -100,7 +101,8 @@ public class ObjectBuilder<T> {
 
             Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
-            object = findObject.findById(entity, id);
+            this.object = findObject.findById(entity, id);
+            this.objects = null;
 
             pool.releaseConnection(connection);
 
@@ -145,7 +147,8 @@ public class ObjectBuilder<T> {
 
         Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
-        object = findObject.findOne(entity, keys, conditionTypes ,values, chain);
+        this.object = findObject.findOne(entity, keys, conditionTypes ,values, chain);
+        this.objects = null;
 
         pool.releaseConnection(connection);
     }
@@ -161,7 +164,8 @@ public class ObjectBuilder<T> {
 
         Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
-        objects = findObject.findMany(entity, keys, conditionTypes ,values, chain, limit);
+        this.objects = findObject.findMany(entity, keys, conditionTypes ,values, chain, limit);
+        this.object = null;
 
         pool.releaseConnection(connection);
     }
@@ -178,10 +182,20 @@ public class ObjectBuilder<T> {
 
             if (attribute instanceof AttributeList) {
                 if (relation instanceof OneToMany) {
-
+                    // OrmApplication
+                    //      .buildObject(attribute.getClazz())
+                    //      .findMany()
+                    //      .where(relation.getOne().getName(), "=", "GL");
+                    // Select * from `user`  WHERE  user.filiere = "GL";
                 }
-                else  {
+                else {
+                    // ManyToMany
 
+//                    SELECT produit.id, produit.nom, produit.prix
+//                    FROM commande_produit, commande, produit
+//                    WHERE commande.id = commande_produit.commande_id
+//                          AND produit.id = commande_produit.produit_id
+//                          AND commande.id = 1
                 }
             }
             else {
@@ -189,9 +203,14 @@ public class ObjectBuilder<T> {
                     OrmApplication
                             .buildObject(attribute.getClazz())
                             .findOne();
+                    // Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
                 }
                 else  {
-
+//                    OrmApplication
+//                            .buildObject(attribute.getClazz())
+//                            .findOne()
+//                            .where(relation.getOne().getName(), "=", "GL");
+                    // Select * from `user`  WHERE  user.filiere = "GL";
                 }
             }
 
@@ -247,8 +266,21 @@ public class ObjectBuilder<T> {
                             .stream()
                             .filter(att -> att.getName().equals(field)).findFirst().orElse(null);
 
-                    if (attribute == null)
-                        throw new ORMException("No attribute with the name " + field + " in this class !");
+                    if (attribute == null) {
+                        Attribute foreignKey = entity
+                                .getForeignKeys()
+                                .stream()
+                                .filter(att -> att.getName().equals(field)).findFirst().orElse(null);
+
+                        if (foreignKey == null)
+                            throw new ORMException("No attribute with the name " + field + " in this class !");
+
+                        keys.add(field);
+                        conditionTypes.add(operator);
+                        values.add(value);
+                        return this;
+                    }
+
 
                     keys.add(field);
                     conditionTypes.add(operator);
@@ -282,6 +314,7 @@ public class ObjectBuilder<T> {
         }
 
         public SearchQueryBuilder limit(Integer value) {
+            //TODO if value is null throw an exception
             limit = value;
             return this;
         }
