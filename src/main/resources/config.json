@@ -4,9 +4,9 @@
   "database": {
     "url": "jdbc:mysql://localhost/SocialNetwork",
     "username": "root",
-    "password": "",
-    "strategy": "create",
-    "dialect" : "update"
+    "password": "134194630",
+    "strategy": "create-drop",
+    "dialect" : "mysql"
   },
   "connectionPool": {
     "maxSize": 10

@@ -3,18 +3,27 @@ package org.orm.framework.DataMapper.QueryBuilders;
 import org.orm.framework.DataMapper1.methods.Query;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SelectQueryBuilder {
     private List<String> tables = new ArrayList<>();
     private List<String> columns = new ArrayList<>();
 
-    private List<String> equalConditions = new ArrayList<>();
-    private List<String> notEqualConditions = new ArrayList<>();
-    private List<String> greaterThenConditions = new ArrayList<>();
-    private List<String> lessThenConditions = new ArrayList<>();
 
-    private List<Object> conditions = new ArrayList<>();
+    private List<String> conditions = new ArrayList<>();
+    private List<ConditionType> conditionsType = new ArrayList<>();
+
+    private enum ConditionType {
+        EQUAL,
+        NOTEQUAL,
+        GREATERTHEN,
+        LESSTHEN,
+        GREATERTHENOREQUAL,
+        LESSTHENOREQUAL
+    }
+
+    private List<Object> conditionsValues = new ArrayList<>();
+
+    private List<String> chains = new ArrayList<>();
 
     private Integer limit;
     private String orderBy;
@@ -30,27 +39,42 @@ public class SelectQueryBuilder {
     }
 
     public SelectQueryBuilder addEqualCondition(String condition, Object value) {
-        equalConditions.add(condition);
-        conditions.add(value);
+        //equalConditions.add(condition);
+        conditions.add(condition);
+        conditionsType.add(ConditionType.EQUAL);
+        conditionsValues.add(value);
         return this;
     }
 
     public SelectQueryBuilder addNotEqualCondition(String condition, Object value) {
-        notEqualConditions.add(condition);
-        conditions.add(value);
+        //notEqualConditions.add(condition);
+        conditions.add(condition);
+        conditionsType.add(ConditionType.NOTEQUAL);
+        conditionsValues.add(value);
         return this;
     }
     public SelectQueryBuilder addGreaterThenCondition(String condition, Object value) {
-        greaterThenConditions.add(condition);
-        conditions.add(value);
+        //greaterThenConditions.add(condition);
+        conditions.add(condition);
+        conditionsType.add(ConditionType.GREATERTHEN);
+        conditionsValues.add(value);
+
         return this;
     }
     public SelectQueryBuilder addLessThenCondition(String condition, Object value) {
-        lessThenConditions.add(condition);
-        conditions.add(value);
+//        lessThenConditions.add(condition);
+        conditions.add(condition);
+        conditionsType.add(ConditionType.LESSTHEN);
+        conditionsValues.add(value);
+
         return this;
     }
 
+    public SelectQueryBuilder addChainOperation(String chain) {
+        chains.add(chain);
+
+        return this;
+    }
 
     public SelectQueryBuilder setOrderBy(String orderBy) {
         this.orderBy = orderBy;
@@ -59,13 +83,19 @@ public class SelectQueryBuilder {
 
     public SelectQueryBuilder setLimit(Integer limit) {
         this.limit = limit;
+
         return this;
     }
 
 
     public Query build() {
-        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, equalConditions, notEqualConditions, greaterThenConditions, lessThenConditions, conditions ,limit,orderBy);
+        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, conditions, conditionsType, conditionsValues,limit,orderBy, chains);
         String sql = queryBuilder.toSql();
+
+        for (int i = 0; i < chains.size(); i++) {
+            sql = sql.replaceFirst("\\$", chains.get(i));
+        }
+
         Object[] values = queryBuilder.getValues();
 
         return new Query(sql, values);
@@ -75,25 +105,23 @@ public class SelectQueryBuilder {
         private List<String> tables;
         private List<String> columns;
 
-        private List<String> equalConditions;
-        private List<String> notEqualConditions;
-        private List<String> greaterThenConditions ;
-        private List<String> lessThenConditions;
+        private List<String> conditions;
+        private List<ConditionType> conditionTypes;
 
-        private List<Object> conditions;
+        private List<Object> conditionsValues;
+        private List<String> chains;
 
         private Integer limit;
         private String orderBy;
-        private Boolean flag = false;
+        private Boolean chainConditionsFLag = false;
 
-        public QueryBuilder(List<String> tables, List<String> columns, List<String> equalConditions, List<String> notEqualConditions, List<String> greaterThenConditions, List<String> lessThenConditions,List<Object> conditions ,Integer limit, String orderBy) {
+        public QueryBuilder(List<String> tables, List<String> columns, List<String> conditions, List<ConditionType> conditionTypes ,List<Object> conditionsValues ,Integer limit, String orderBy, List<String> chains) {
             this.tables = tables;
             this.columns = columns;
-            this.equalConditions = equalConditions;
-            this.notEqualConditions = notEqualConditions;
-            this.greaterThenConditions = greaterThenConditions;
-            this.lessThenConditions = lessThenConditions;
             this.conditions = conditions;
+            this.conditionsValues = conditionsValues;
+            this.conditionTypes = conditionTypes;
+            this.chains = chains;
             this.limit = limit;
             this.orderBy = orderBy;
         }
@@ -103,7 +131,7 @@ public class SelectQueryBuilder {
             builder.append("SELECT ");
 
             if (columns.isEmpty()) {
-
+                //TODO
             } else {
                 builder.append(String.join(",", columns));
             }
@@ -111,41 +139,32 @@ public class SelectQueryBuilder {
             builder.append(" FROM ");
             builder.append(String.join(",", tables));
 
-            if (!equalConditions.isEmpty() || !notEqualConditions.isEmpty() || !greaterThenConditions.isEmpty() || !lessThenConditions.isEmpty())
-                    builder.append(" WHERE ");
+            if (!conditions.isEmpty()) {
+                builder.append(" WHERE ");
 
+                for (int i = 0; i < conditions.size(); i++) {
+                    chainQuery(builder);
+                    String condition = conditions.get(i);
+                    ConditionType conditionType = conditionTypes.get(i);
 
-            if (!equalConditions.isEmpty()) {
-                addAndToQuery(builder);
-                builder.append(equalConditions.stream()
-                        .map(condition -> condition  + " LIKE ?")
-                        .collect(Collectors.joining(" AND ")));
+                    if (conditionType.equals(ConditionType.EQUAL)) {
+                            builder.append(condition  + " LIKE ? ");
+                            chainConditionsFLag = true;
+                    }
+                    else if (conditionType.equals(ConditionType.NOTEQUAL)) {
+                        builder.append(condition  + " <> ? ");
+                        chainConditionsFLag = true;
+                    }
+                    else if (conditionType.equals(ConditionType.GREATERTHEN)) {
+                        builder.append(condition  + " > ? ");
+                        chainConditionsFLag = true;
+                    }
+                    else if (conditionType.equals(ConditionType.LESSTHEN)) {
+                        builder.append(condition  + " < ? ");
+                        chainConditionsFLag = true;
+                    }
 
-                flag=true;
-            }
-
-            if (!notEqualConditions.isEmpty()) {
-                addAndToQuery(builder);
-                builder.append(notEqualConditions.stream()
-                        .map(condition -> condition  + " <> ?")
-                        .collect(Collectors.joining(" AND ")));
-                flag=true;
-            }
-
-            if (!greaterThenConditions.isEmpty()) {
-                addAndToQuery(builder);
-                builder.append(greaterThenConditions.stream()
-                        .map(condition -> condition  + " > ?")
-                        .collect(Collectors.joining(" AND ")));
-                flag=true;
-            }
-
-            if (!lessThenConditions.isEmpty()) {
-                addAndToQuery(builder);
-                builder.append(lessThenConditions.stream()
-                        .map(condition -> condition  + " < ?")
-                        .collect(Collectors.joining(" AND ")));
-                flag=true;
+                }
             }
 
 
@@ -162,16 +181,18 @@ public class SelectQueryBuilder {
             return builder.toString();
         }
 
-        public Object[] getValues() {
-            if (this.limit != null)
-                conditions.add(limit);
-            return conditions.toArray();
-        }
-        private void addAndToQuery(StringBuilder stringBuilder) {
-            if (flag){
-                stringBuilder.append(" AND ");
-                flag = false;
+        private void chainQuery(StringBuilder stringBuilder) {
+            if (chainConditionsFLag){
+                stringBuilder.append(" $ ");
+                chainConditionsFLag = false;
             }
         }
+
+        public Object[] getValues() {
+            if (this.limit != null)
+                conditionsValues.add(limit);
+            return conditionsValues.toArray();
+        }
+
     }
 }
