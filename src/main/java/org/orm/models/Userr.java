@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public @Data class User {
+public @Data class Userr {
     private String cin;
     private String cne;
     private String name;
@@ -31,7 +31,7 @@ public @Data class User {
 
 
 
-    public User(String cin, String cne, String name, String email, String lastName, Integer age) {
+    public Userr(String cin, String cne, String name, String email, String lastName, Integer age) {
         this.cin = cin;
         this.cne = cne;
         this.name = name;
@@ -40,7 +40,7 @@ public @Data class User {
         this.age = age;
     }
 
-    public User(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere) {
+    public Userr(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere) {
         this.cin = cin;
         this.cne = cne;
         this.name = name;
@@ -51,7 +51,7 @@ public @Data class User {
         this.filiere = filiere;
     }
 
-    public User(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere, List<Post> posts) {
+    public Userr(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere, List<Post> posts) {
         this.cin = cin;
         this.cne = cne;
         this.name = name;

@@ -2,11 +2,11 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/SocialNetwork",
+    "url": "jdbc:postgresql://localhost:5432/postgres",
     "username": "root",
-    "password": "",
+    "password": "134194630",
     "strategy": "create",
-    "dialect" : "mysql"
+    "dialect" : "postgresql"
   },
   "connectionPool": {
     "maxSize": 10

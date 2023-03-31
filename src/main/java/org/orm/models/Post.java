@@ -14,7 +14,7 @@ public @Data class Post {
     private String content;
     private Date date;
 
-    private User proprietaire;
+    private Userr proprietaire;
 
     private List<Attachement> attachementList;
 
@@ -28,7 +28,7 @@ public @Data class Post {
         this.date = date;
     }
 
-    public Post(Long id, String content, Date date, User proprietaire) {
+    public Post(Long id, String content, Date date, Userr proprietaire) {
         this.id = id;
         this.content = content;
         this.date = date;

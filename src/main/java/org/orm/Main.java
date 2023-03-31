@@ -3,7 +3,6 @@ package org.orm;
 import org.orm.framework.OrmApplication;
 import org.orm.models.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,20 +41,20 @@ public class Main {
                     .save(post);
         }
 
-        User user0 = new User("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
-        User user1 = new User("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
-        User user2 = new User("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
-        User user3 = new User("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
+        Userr user0 = new Userr("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
+        Userr user1 = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
+        Userr user2 = new Userr("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
+        Userr user3 = new Userr("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
 
-        List<User> users = new ArrayList<>();
+        List<Userr> users = new ArrayList<>();
         users.add(user0);
         users.add(user1);
         users.add(user2);
         users.add(user3);
 
-        for (User user : users) {
+        for (Userr user : users) {
             OrmApplication
-                    .buildObject(User.class)
+                    .buildObject(Userr.class)
                     .save(user);
         }
 
@@ -69,7 +68,7 @@ public class Main {
         SubCommentaire springFramework = new SubCommentaire();
         springFramework.setContent("can you use spring with kotlin");
         springFramework.setDate(new Date());
-        springFramework.setUser(user1);
+        springFramework.setUserr(user1);
 
         SubCommentaire springFrameworkPersisted = OrmApplication
                 .buildObject(SubCommentaire.class)
@@ -79,8 +78,8 @@ public class Main {
         System.out.println(springFramework+"  springFramework");
 
 
-        User user = OrmApplication
-                    .buildObject(User.class)
+        Userr user = OrmApplication
+                    .buildObject(Userr.class)
                     .findOne()
                     .where("age", "<>", 30)
                     .and("name", "=", "Marwane")
@@ -90,8 +89,8 @@ public class Main {
 
         System.out.println(user);
 
-        List<User> users1 = OrmApplication
-                .buildObject(User.class)
+        List<Userr> users1 = OrmApplication
+                .buildObject(Userr.class)
                 .findMany()
                 .where("age", "equals", 30)
                 .or("name", "like", "%ane")
@@ -109,7 +108,7 @@ public class Main {
 
 
         OrmApplication
-                .buildObject(User.class)
+                .buildObject(Userr.class)
                 .findOne()
                 .where("name", "like", "Marwane")
                 .execute()

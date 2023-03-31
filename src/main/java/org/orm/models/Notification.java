@@ -15,5 +15,5 @@ public @Data class Notification {
     private String content;
     private String url;
 
-    private User user;
+    private Userr userr;
 }
