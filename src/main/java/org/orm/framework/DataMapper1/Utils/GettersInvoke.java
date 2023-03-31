@@ -33,6 +33,7 @@ public class GettersInvoke {
     public static Object getPrimaryKeyValue(PrimaryKey primaryKey, Object object) {
         try {
             System.out.println(primaryKey.getOriginalName());
+            System.out.println(object);
             Method getterOfAttribute = object.getClass()
                     .getMethod(
                             "get" +

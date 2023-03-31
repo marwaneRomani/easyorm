@@ -2,10 +2,12 @@ package org.orm.framework.DataMapper1.Utils;
 
 import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
+import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.AttributeList;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class SettersInvoke {
 
@@ -42,7 +44,7 @@ public class SettersInvoke {
                                             .toUpperCase() +
                                     attribute.getOriginalName()
                                             .substring(1),
-                            entity.getModel()
+                            attribute instanceof AttributeList ? List.class : entity.getModel()
                     );
             try {
                 setterOfAttribute.invoke(object,newValue);
