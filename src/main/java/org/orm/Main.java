@@ -3,7 +3,6 @@ package org.orm;
 import org.orm.framework.OrmApplication;
 import org.orm.models.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,16 +13,16 @@ public class Main {
         OrmApplication.run();
 
         Filiere gl = new Filiere("GL", "GL is the best option you can choose");
-//
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .save(gl);
+
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(gl);
 
         ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", gl);
 
-//        OrmApplication
-//                .buildObject(ChefFilliere.class)
-//                .save(ibriz);
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(ibriz);
 
 
 
@@ -36,111 +35,90 @@ public class Main {
         posts.add(post1);
         posts.add(post2);
 
-//        for (Post post : posts) {
-//            OrmApplication
-//                    .buildObject(Post.class)
-//                    .save(post);
-//        }
+        for (Post post : posts) {
+            OrmApplication
+                    .buildObject(Post.class)
+                    .save(post);
+        }
 
-        User user0 = new User("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
-        User user1 = new User("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
-        User user2 = new User("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
-        User user3 = new User("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
+        Userr user0 = new Userr("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
+        Userr user1 = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
+        Userr user2 = new Userr("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
+        Userr user3 = new Userr("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
 
-        List<User> users = new ArrayList<>();
+        List<Userr> users = new ArrayList<>();
         users.add(user0);
         users.add(user1);
         users.add(user2);
         users.add(user3);
 
-//        for (User user : users) {
-//            OrmApplication
-//                    .buildObject(User.class)
-//                    .save(user);
-//        }
+        for (Userr user : users) {
+            OrmApplication
+                    .buildObject(Userr.class)
+                    .save(user);
+        }
 
         Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,user1, user0);
 
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message);
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message);
 
 
         SubCommentaire springFramework = new SubCommentaire();
         springFramework.setContent("can you use spring with kotlin");
         springFramework.setDate(new Date());
-        springFramework.setUser(user1);
+        springFramework.setUserr(user1);
 
-//        SubCommentaire springFrameworkPersisted = OrmApplication
-//                .buildObject(SubCommentaire.class)
-//                .save(springFramework);
-//
-//        System.out.println(springFrameworkPersisted + "  springFrameworkPersisted)");
-//        System.out.println(springFramework+"  springFramework");
+        SubCommentaire springFrameworkPersisted = OrmApplication
+                .buildObject(SubCommentaire.class)
+                .save(springFramework);
 
-
-//        User user = OrmApplication
-//                    .buildObject(User.class)
-//                    .findOne()
-//                    .where("age", "<>", 30)
-//                    .and("name", "=", "Marwane")
-//                    .and("cin", "=", "134794630")
-//                    .execute()
-//                    .buildObject();
-//
-//        System.out.println(user);
-
-//        List<User> users1 = OrmApplication
-//                .buildObject(User.class)
-//                .findMany()
-//                .where("age", "equals", 30)
-//                .or("name", "like", "%ane")
-//                .and("filiere", "<>", "GL")
-//                .execute()
-//                .buildObjects();
-//
-//        System.out.println(users1);
+        System.out.println(springFrameworkPersisted + "  springFrameworkPersisted)");
+        System.out.println(springFramework+"  springFramework");
 
 
+        Userr user = OrmApplication
+                    .buildObject(Userr.class)
+                    .findOne()
+                    .where("age", "<>", 30)
+                    .and("name", "=", "Marwane")
+                    .and("cin", "=", "134794630")
+                    .execute()
+                    .buildObject();
 
-//        Filiere f = OrmApplication
+        System.out.println(user);
+
+        List<Userr> users1 = OrmApplication
+                .buildObject(Userr.class)
+                .findMany()
+                .where("age", "equals", 30)
+                .or("name", "like", "%ane")
+                .and("filiere", "<>", "GL")
+                .execute()
+                .buildObjects();
+
+        System.out.println(users1);
+
+//        OrmApplication
 //                .buildObject(Filiere.class)
 //                .findById("GL")
-//                .get("students")
-//                .buildObject();
-//
-//        System.out.println(f);
-//
-//
-//        User users1 = OrmApplication
-//                .buildObject(User.class)
-//                .findOne()
-//                .where("name", "like", "Marwane")
-//                .execute()
-//                .get("filiere")
-//                .buildObject();
-//
-//        System.out.println(users1);
-//
-//
+//                .findAll()
+//                .get("students");
 
 
+        OrmApplication
+                .buildObject(Userr.class)
+                .findOne()
+                .where("name", "like", "Marwane")
+                .execute()
+                .get("filiere");
 
-
-//        // Many to many
-        Filiere filiere = OrmApplication
+        OrmApplication
                 .buildObject(Filiere.class)
                 .findById("GL")
-                .get("manyUsers")
-                .buildObject();
-        System.out.println(filiere);
+                .get("manyUsers");
 
-//        List<User> usersList = OrmApplication
-//                .buildObject(User.class)
-//                .findAll()
-//                .get("filiere")
-//                .buildObjects();
-//        System.out.println(usersList);
     }
 
 }

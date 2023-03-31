@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.orm.framework.ModelsMapper.Annotations.Id;
 
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +16,5 @@ public @Data class SubCommentaire {
     private Date date;
 
     private Commentaire commentaire;
-    private User user;
+    private Userr userr;
 }

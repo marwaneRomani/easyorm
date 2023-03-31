@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public @Data class LignePostReaction {
     private Integer id;
 
-    private User user;
+    private Userr userr;
     private Post post;
     private Reaction reaction;
 }

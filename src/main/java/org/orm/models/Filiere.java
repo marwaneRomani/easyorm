@@ -12,10 +12,10 @@ public @Data class Filiere {
     private String nom;
     private String description;
 
-    private List<User> students;
+    private List<Userr> students;
 
     // many to many with user for test
-    private List<User> manyUsers;
+    private List<Userr> manyUsers;
 
     private ChefFilliere chefFilliere;
 

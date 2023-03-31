@@ -23,7 +23,7 @@ public class Transaction {
             conn.commit();
         } catch (Exception e) {
             try {
-                conn.rollback();
+                conn.commit();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

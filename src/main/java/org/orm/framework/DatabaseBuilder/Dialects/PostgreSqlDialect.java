@@ -14,9 +14,10 @@ public class PostgreSqlDialect implements Dialect {
         builder.append("CREATE TABLE ").append(tableName).append(" (\n");
 
         for (PrimaryKey primaryKey : primaryKeys) {
-            builder.append(primaryKey.getName()).append(" ").append(primaryKey.getDbType());
-            if (primaryKey.isAutoIncrement()) {
-                builder.append(" ").append(getAutoIncrementKeyword());
+            if (!primaryKey.isAutoIncrement())
+                builder.append(primaryKey.getName()).append(" ").append(primaryKey.getDbType());
+            else {
+                builder.append(primaryKey.getName()).append(" ").append(getAutoIncrementKeyword());
             }
             builder.append(",\n");
         }
@@ -82,7 +83,7 @@ public class PostgreSqlDialect implements Dialect {
     public String getAddForeignKeySyntax(String tableName, String foreignKeyName, List<String> localColumns, String referencedTable, List<String> referencedColumns) {
         StringBuilder builder = new StringBuilder();
         builder.append("ALTER TABLE ").append(tableName).append(" ADD CONSTRAINT ")
-                .append(UUID.randomUUID() + foreignKeyName).append(" FOREIGN KEY (");
+                .append("fk_" + (UUID.randomUUID() + "_" + foreignKeyName).replaceAll("-", "_")).append(" FOREIGN KEY (");
         for (String localColumn : localColumns) {
             builder.append(localColumn).append(", ");
         }

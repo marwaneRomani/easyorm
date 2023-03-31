@@ -15,6 +15,6 @@ public @Data class Commentaire {
     private Date date;
 
     private Post post;
-    private User user;
+    private Userr userr;
     private List<SubCommentaire> subCommentaires;
 }

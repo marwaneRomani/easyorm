@@ -14,6 +14,6 @@ public @Data class Message {
     private Date date;
     private Boolean seen;
 
-    private User sender;
-    private User receiver;
+    private Userr sender;
+    private Userr receiver;
 }
