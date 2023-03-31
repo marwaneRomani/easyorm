@@ -9,115 +9,103 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // TODO FIX VARCHAR DEFAULT SIZE => 100
+        // TODO ADD Foreing key to manytomany table
 
         OrmApplication.run();
 
         Filiere gl = new Filiere("GL", "GL is the best option you can choose");
+        Filiere abd = new Filiere("ABD", "abd == hachemoud");
+        Filiere asr = new Filiere("ASR", "asr == Khartouch");
 
         OrmApplication
                 .buildObject(Filiere.class)
                 .save(gl);
 
-        ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", gl);
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(asr);
+
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(abd);
+
+
+        ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", List.of(gl, abd));
+        ChefFilliere khartoch = new ChefFilliere(2l, "Khartoch", List.of(asr));
+
 
         OrmApplication
                 .buildObject(ChefFilliere.class)
                 .save(ibriz);
 
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(khartoch);
 
 
-        Post post0 = new Post(1l, "HOW HTTP REQUEST HANDELED BY NODE", new Date());
-        Post post1 = new Post(2l, "ANDROID CONSTRAINT LAYOUT", new Date());
-        Post post2 = new Post(3l, "SHA-256 ALGORITHM IN CRYPTOGRAPHIE", new Date());
+        Userr houssam = new Userr("123456789", "1234567", "Houssam", "houssam@example.com", "Houssam", 20, asr, List.of(asr, gl));
+        Userr marwane = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Romani", 20, gl, List.of(asr, gl));
+        Userr enzeo = new Userr("185444554", "1234567", "Enzo", "enzo@example.com", "enzo", 20, abd, List.of(asr, abd));
+        Userr oussama = new Userr("155778877", "1234567", "Oussama", "oussama@example.com", "Amrani", 20, gl, List.of(asr, abd, gl));
+
+        List<Userr> users = new ArrayList<>();
+        users.add(houssam);
+        users.add(marwane);
+        users.add(enzeo);
+        users.add(oussama);
+
+        for (Userr user : users)
+            OrmApplication
+                    .buildObject(Userr.class)
+                    .save(user);
+
+
+        Post post0 = new Post(1l, "HOW HTTP REQUEST HANDELED BY NODE", new Date(), marwane);
+        Post post1 = new Post(2l, "ANDROID CONSTRAINT LAYOUT", new Date(), oussama);
+        Post post2 = new Post(3l, "SHA-256 ALGORITHM IN CRYPTOGRAPHIE", new Date(), houssam);
+        Post post3 = new Post(4l, "SHA-554 ALGORITHM", new Date(), oussama);
+        Post post4 = new Post(5l, "SHA-545 ALGORITHM", new Date(), oussama);
+        Post post5 = new Post(6l, "SHA-877 CRYPTOGRAPHIE", new Date(), oussama);
+
+
         List<Post> posts = new ArrayList<>();
 
         posts.add(post0);
         posts.add(post1);
         posts.add(post2);
+        posts.add(post3);
+        posts.add(post4);
+        posts.add(post5);
 
-        for (Post post : posts) {
+
+        for (Post post : posts)
             OrmApplication
                     .buildObject(Post.class)
                     .save(post);
-        }
 
-        Userr user0 = new Userr("123456789", "1234567", "John", "john@example.com", "Doe", 30, gl,List.of(posts.get(0)));
-        Userr user1 = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Doe", 20, gl, List.of(posts.get(1)));
-        Userr user2 = new Userr("185444554", "1234567", "Oussama", "Oussama@example.com", "Doe", 20, gl, List.of(posts.get(2)));
-        Userr user3 = new Userr("155778877", "1234567", "Amine", "Amine@example.com", "Doe", 20, gl);
 
-        List<Userr> users = new ArrayList<>();
-        users.add(user0);
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-
-        for (Userr user : users) {
-            OrmApplication
-                    .buildObject(Userr.class)
-                    .save(user);
-        }
-
-        Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,user1, user0);
+        Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
+        Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
+        Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
+        Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
 
         OrmApplication
                 .buildObject(Message.class)
-                .save(message);
-
-
-        SubCommentaire springFramework = new SubCommentaire();
-        springFramework.setContent("can you use spring with kotlin");
-        springFramework.setDate(new Date());
-        springFramework.setUserr(user1);
-
-        SubCommentaire springFrameworkPersisted = OrmApplication
-                .buildObject(SubCommentaire.class)
-                .save(springFramework);
-
-        System.out.println(springFrameworkPersisted + "  springFrameworkPersisted)");
-        System.out.println(springFramework+"  springFramework");
-
-
-        Userr user = OrmApplication
-                    .buildObject(Userr.class)
-                    .findOne()
-                    .where("age", "<>", 30)
-                    .and("name", "=", "Marwane")
-                    .and("cin", "=", "134794630")
-                    .execute()
-                    .buildObject();
-
-        System.out.println(user);
-
-        List<Userr> users1 = OrmApplication
-                .buildObject(Userr.class)
-                .findMany()
-                .where("age", "equals", 30)
-                .or("name", "like", "%ane")
-                .and("filiere", "<>", "GL")
-                .execute()
-                .buildObjects();
-
-        System.out.println(users1);
-
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .findById("GL")
-//                .findAll()
-//                .get("students");
-
+                .save(message0);
 
         OrmApplication
-                .buildObject(Userr.class)
-                .findOne()
-                .where("name", "like", "Marwane")
-                .execute()
-                .get("filiere");
+                .buildObject(Message.class)
+                .save(message1);
 
         OrmApplication
-                .buildObject(Filiere.class)
-                .findById("GL")
-                .get("manyUsers");
+                .buildObject(Message.class)
+                .save(message2);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message3);
+
 
     }
 

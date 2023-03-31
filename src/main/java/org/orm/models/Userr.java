@@ -19,7 +19,7 @@ public @Data class Userr {
     private Filiere filiere;
 
     // many to many with filiere for test
-    private List<Filiere> manyFilieres;
+    private List<Filiere> particapationFilieres;
 
     private List<Message> sentMessages;
     private List<Message> receivedMessages;
@@ -51,7 +51,7 @@ public @Data class Userr {
         this.filiere = filiere;
     }
 
-    public Userr(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere, List<Post> posts) {
+    public Userr(String cin, String cne, String name, String email, String lastName, Integer age, Filiere filiere, List<Filiere> particapationFilieres) {
         this.cin = cin;
         this.cne = cne;
         this.name = name;
@@ -61,6 +61,7 @@ public @Data class Userr {
 
         this.filiere = filiere;
         this.posts = posts;
+        this.particapationFilieres = particapationFilieres;
     }
 
 

@@ -15,7 +15,7 @@ public @Data class Filiere {
     private List<Userr> students;
 
     // many to many with user for test
-    private List<Userr> manyUsers;
+    private List<Userr> participatedUsers;
 
     private ChefFilliere chefFilliere;
 
