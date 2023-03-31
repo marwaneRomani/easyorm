@@ -183,7 +183,6 @@ public class CreateBuilder implements StategyBuilder {
     }
 
     protected String[] evaluateManyToManyRelation(Relation relation) throws Exception {
-        System.out.println(relation);
 
         Method getFirst = ManyToMany.class.getMethod("getFirst");
         Method getLast = ManyToMany.class.getMethod("getLast");
@@ -191,7 +190,7 @@ public class CreateBuilder implements StategyBuilder {
         AttributeList first = (AttributeList) getFirst.invoke(relation);
         AttributeList last = (AttributeList) getLast.invoke(relation);
 
-        // We create a new Entity named Between
+        // We create a new Entity named first_last
 
         String firstTable = getEntityName(first);
         String lastTableName = getEntityName(last);
@@ -200,18 +199,33 @@ public class CreateBuilder implements StategyBuilder {
                 .getModelsSchemas()
                 .get(first.getGenericType())
                 .getPrimaryKey();
+
         PrimaryKey primaryKeyOfLastEntity = EntitiesDataSource
                 .getModelsSchemas()
                 .get(last.getGenericType())
                 .getPrimaryKey();
 
-        StringBuilder script = new StringBuilder();
+        PrimaryKey firstPrimaryKey = new PrimaryKey();
+        firstPrimaryKey.setName(firstTable + '_' + primaryKeyOfFirstEntity.getName());
+        firstPrimaryKey.setType(primaryKeyOfFirstEntity.getType());
+        firstPrimaryKey.setOriginalName(primaryKeyOfFirstEntity.getOriginalName());
+        firstPrimaryKey.setAutoIncrement(primaryKeyOfFirstEntity.isAutoIncrement());
+        firstPrimaryKey.setLength(primaryKeyOfFirstEntity.getLength());
+        firstPrimaryKey.setDbType(primaryKeyOfFirstEntity.getDbType());
 
-        String createTableSyntax = dialect.getCreateTableSyntax(firstTable + "_" + lastTableName, List.of(), List.of(primaryKeyOfFirstEntity, primaryKeyOfLastEntity));
+        PrimaryKey lastPrimaryKey = new PrimaryKey();
+        lastPrimaryKey.setName(lastTableName + '_' + primaryKeyOfLastEntity.getName());
+        lastPrimaryKey.setType(primaryKeyOfLastEntity.getType());
+        lastPrimaryKey.setOriginalName(primaryKeyOfLastEntity.getOriginalName());
+        lastPrimaryKey.setAutoIncrement(primaryKeyOfLastEntity.isAutoIncrement());
+        lastPrimaryKey.setLength(primaryKeyOfLastEntity.getLength());
+        lastPrimaryKey.setDbType(primaryKeyOfLastEntity.getDbType());
 
-        System.out.println(createTableSyntax);
 
-        return new String[] { script.toString() };
+        String createTableSyntax = dialect.getCreateTableSyntax(((ManyToMany)relation).getTableName(), List.of(), List.of(firstPrimaryKey, lastPrimaryKey));
+
+
+        return new String[] { createTableSyntax };
     }
 
 

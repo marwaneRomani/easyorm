@@ -30,7 +30,7 @@ public class OrmApplication {
             pool.releaseConnection(connection);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

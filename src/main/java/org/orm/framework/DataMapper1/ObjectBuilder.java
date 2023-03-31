@@ -5,6 +5,8 @@ import org.orm.framework.ConnectionsPool.ConnectionPool;
 import org.orm.framework.DataMapper1.JdbcTemplate.JdbcTemplateImpl;
 import org.orm.framework.DataMapper1.Utils.FindAttribute;
 import org.orm.framework.DataMapper1.Utils.FindAttributeRelation;
+import org.orm.framework.DataMapper1.Utils.GettersInvoke;
+import org.orm.framework.DataMapper1.Utils.SettersInvoke;
 import org.orm.framework.DataMapper1.methods.find.Find;
 import org.orm.framework.DataMapper1.methods.save.Save;
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
@@ -180,37 +182,66 @@ public class ObjectBuilder<T> {
             Attribute attribute = FindAttribute.find(entity, relationName);
             Relation relation = FindAttributeRelation.find(attribute, entity);
 
+            Entity attributeEntity = EntitiesDataSource
+                    .getModelsSchemas()
+                    .get((attribute instanceof AttributeList) ? ((AttributeList) attribute).getGenericType() : attribute.getType() );
+
+            Class<?> attributeClass = attributeEntity.getModel();
+
+            Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
+
+
             if (attribute instanceof AttributeList) {
                 if (relation instanceof OneToMany) {
-                    // OrmApplication
-                    //      .buildObject(attribute.getClazz())
-                    //      .findMany()
-                    //      .where(relation.getOne().getName(), "=", "GL");
-                    // Select * from `user`  WHERE  user.filiere = "GL";
+                    // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
+                    Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+
+                    List<?> foundObjects = OrmApplication
+                            .buildObject(attributeClass)
+                            .findMany()
+                            .where(relation.getOne().getName(), "=", primaryKeyValue)
+                            .execute()
+                            .buildObjects();
+
+                    //TODO FIX THE SETTER IN THE LIST CASE
+                    SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, foundObjects);
                 }
                 else {
                     // ManyToMany
+                    // Query Example :
+                    //  SELECT produit.id, produit.nom, produit.prix
+                    //  FROM commande_produit, commande, produit
+                    //  WHERE commande.id = commande_produit.commande_id
+                    //        AND produit.id = commande_produit.produit_id
+                    //        AND commande.id = 1
 
-//                    SELECT produit.id, produit.nom, produit.prix
-//                    FROM commande_produit, commande, produit
-//                    WHERE commande.id = commande_produit.commande_id
-//                          AND produit.id = commande_produit.produit_id
-//                          AND commande.id = 1
+                    Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+                    findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
                 }
             }
             else {
                 if (relation instanceof OneToMany) {
-                    OrmApplication
-                            .buildObject(attribute.getClazz())
-                            .findOne();
-                    // Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
+                    //Query example Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
+
+                    Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+
+                    Object relationObject = findObject.findForeignKey(entity, primaryKeyValue, attributeEntity, attribute.getName());
+                    System.out.println(relationObject);
+
+                    SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, relationObject);
                 }
                 else  {
-//                    OrmApplication
-//                            .buildObject(attribute.getClazz())
-//                            .findOne()
-//                            .where(relation.getOne().getName(), "=", "GL");
-                    // Select * from `user`  WHERE  user.filiere = "GL";
+                    // Query example : Select * from `user`  WHERE  user.filiere = "GL";
+                    Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+
+                    Object o = OrmApplication
+                            .buildObject(attributeClass)
+                            .findOne()
+                            .where(relation.getOne().getName(), "=", primaryKeyValue)
+                            .execute()
+                            .buildObject();
+
+                    System.out.println(o);
                 }
             }
 

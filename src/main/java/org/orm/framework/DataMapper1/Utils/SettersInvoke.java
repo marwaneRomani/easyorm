@@ -1,5 +1,6 @@
 package org.orm.framework.DataMapper1.Utils;
 
+import org.orm.framework.EntitiesDataSource.Entity;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
 
@@ -7,8 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class SettersInvoke {
-    public static void setAttribute(Attribute attribute, Object object, Object newValue) {
 
+    public static void setAttribute(Attribute attribute, Object object, Object newValue) {
         Method setterOfAttribute = null;
         try {
             setterOfAttribute = object.getClass()
@@ -29,8 +30,28 @@ public class SettersInvoke {
             throw new RuntimeException(e);
         }
 
+    }
 
-
+    public static void setRelationalAttribute(Entity entity, Attribute attribute, Object object, Object newValue) {
+        Method setterOfAttribute = null;
+        try {
+            setterOfAttribute = object.getClass()
+                    .getMethod(
+                            "set" +
+                                    attribute.getOriginalName().substring(0, 1)
+                                            .toUpperCase() +
+                                    attribute.getOriginalName()
+                                            .substring(1),
+                            entity.getModel()
+                    );
+            try {
+                setterOfAttribute.invoke(object,newValue);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

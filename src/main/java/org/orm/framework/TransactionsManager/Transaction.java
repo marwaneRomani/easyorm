@@ -21,7 +21,7 @@ public class Transaction {
                     });
 
             conn.commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             try {
                 conn.rollback();
             } catch (SQLException ex) {

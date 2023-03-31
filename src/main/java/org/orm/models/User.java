@@ -18,6 +18,9 @@ public @Data class User {
 
     private Filiere filiere;
 
+    // many to many with filiere for test
+    private List<Filiere> manyFilieres;
+
     private List<Message> sentMessages;
     private List<Message> receivedMessages;
     private List<Notification> notifications;

@@ -101,11 +101,25 @@ public class Main {
 
         System.out.println(users1);
 
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .findById("GL")
+//                .findAll()
+//                .get("students");
+
+
+        OrmApplication
+                .buildObject(User.class)
+                .findOne()
+                .where("name", "like", "Marwane")
+                .execute()
+                .get("filiere");
+
         OrmApplication
                 .buildObject(Filiere.class)
                 .findById("GL")
-                .findAll()
-                .get("students");
+                .get("manyUsers");
+
     }
 
 }
