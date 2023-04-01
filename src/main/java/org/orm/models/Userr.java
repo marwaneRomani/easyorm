@@ -60,7 +60,7 @@ public @Data class Userr {
         this.age = age;
 
         this.filiere = filiere;
-        this.posts = posts;
+//        this.posts = posts;
         this.particapationFilieres = particapationFilieres;
     }
 
