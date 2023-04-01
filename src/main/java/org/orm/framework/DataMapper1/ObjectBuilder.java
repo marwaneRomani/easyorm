@@ -256,7 +256,9 @@ public class ObjectBuilder<T> {
                     if (!isFindOneMethod) {
                         objects.forEach(object_ -> {
                             Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
-                            findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
+                            List<Object> fromManyToManyRelation = findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
+
+                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, fromManyToManyRelation);
                         });
                     } else {
                         Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);

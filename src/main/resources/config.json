@@ -2,10 +2,10 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/Social",
+    "url": "jdbc:mysql://localhost/SocialNetwork",
     "username": "root",
     "password": "",
-    "strategy": "create",
+    "strategy": "update",
     "dialect" : "mysql"
   },
   "connectionPool": {
