@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO FIX VARCHAR DEFAULT SIZE => 100
         // TODO ADD Foreing key to manytomany table
 
         OrmApplication.run();
@@ -30,11 +29,11 @@ public class Main {
                 .buildObject(Filiere.class)
                 .save(abd);
 
-
+//
         ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", List.of(gl, abd));
         ChefFilliere khartoch = new ChefFilliere(2l, "Khartoch", List.of(asr));
-
-
+//
+//
         OrmApplication
                 .buildObject(ChefFilliere.class)
                 .save(ibriz);
@@ -42,33 +41,34 @@ public class Main {
         OrmApplication
                 .buildObject(ChefFilliere.class)
                 .save(khartoch);
-
-
-        Userr houssam = new Userr("123456789", "1234567", "Houssam", "houssam@example.com", "Houssam", 20, asr, List.of(asr, gl));
-        Userr marwane = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Romani", 20, gl, List.of(asr, gl));
-        Userr enzeo = new Userr("185444554", "1234567", "Enzo", "enzo@example.com", "enzo", 20, abd, List.of(asr, abd));
-        Userr oussama = new Userr("155778877", "1234567", "Oussama", "oussama@example.com", "Amrani", 20, gl, List.of(asr, abd, gl));
+//
+//
+        Userr houssam = new Userr("123456789", "1234567", "Houssam", "houssam@example.com", "Houssam", 20, asr);
+        Userr marwane = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Romani", 20, gl);
+        Userr enzeo = new Userr("185444554", "1234567", "Enzo", "enzo@example.com", "enzo", 20, abd);
+        Userr oussama = new Userr("155778877", "1234567", "Oussama", "oussama@example.com", "Amrani", 20, gl);
+//
 
         List<Userr> users = new ArrayList<>();
         users.add(houssam);
         users.add(marwane);
         users.add(enzeo);
         users.add(oussama);
-
+//
         for (Userr user : users)
             OrmApplication
                     .buildObject(Userr.class)
                     .save(user);
 
-
+//
         Post post0 = new Post(1l, "HOW HTTP REQUEST HANDELED BY NODE", new Date(), marwane);
         Post post1 = new Post(2l, "ANDROID CONSTRAINT LAYOUT", new Date(), oussama);
         Post post2 = new Post(3l, "SHA-256 ALGORITHM IN CRYPTOGRAPHIE", new Date(), houssam);
         Post post3 = new Post(4l, "SHA-554 ALGORITHM", new Date(), oussama);
         Post post4 = new Post(5l, "SHA-545 ALGORITHM", new Date(), oussama);
         Post post5 = new Post(6l, "SHA-877 CRYPTOGRAPHIE", new Date(), oussama);
-
-
+//
+//
         List<Post> posts = new ArrayList<>();
 
         posts.add(post0);
@@ -77,23 +77,23 @@ public class Main {
         posts.add(post3);
         posts.add(post4);
         posts.add(post5);
-
-
+//
+//
         for (Post post : posts)
             OrmApplication
                     .buildObject(Post.class)
                     .save(post);
 
-
+//
         Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
         Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
         Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
         Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
-
+//
         OrmApplication
                 .buildObject(Message.class)
                 .save(message0);
-
+//
         OrmApplication
                 .buildObject(Message.class)
                 .save(message1);
