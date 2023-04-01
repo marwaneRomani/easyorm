@@ -133,8 +133,8 @@ public class FindUtils<T> {
         searchedEntity.getNormalAttributes().forEach(attribute -> selectQueryBuilder.addColumn(searchedEntity.getName() + '.' + attribute.getName()));
 
         // set conditions
-        selectQueryBuilder.addEqualCondition(((ManyToMany) relation).getTableName() + '.' + entity.getName().toLowerCase() + "_" + searchedEntity.getPrimaryKey().getName(), entity.getName() + '.' + entity.getPrimaryKey().getName());
-        selectQueryBuilder.addEqualCondition(((ManyToMany) relation).getTableName() + '.' + searchedEntity.getName().toLowerCase() + "_" + entity.getPrimaryKey().getName(), searchedEntity.getName() +  '.' + searchedEntity.getPrimaryKey().getName());
+        selectQueryBuilder.addEqualCondition(((ManyToMany) relation).getTableName() + '.' + entity.getName().toLowerCase() + "_" + entity.getPrimaryKey().getName(), entity.getName() + '.' + entity.getPrimaryKey().getName());
+        selectQueryBuilder.addEqualCondition(((ManyToMany) relation).getTableName() + '.' + searchedEntity.getName().toLowerCase() + "_" +  searchedEntity.getPrimaryKey().getName(), searchedEntity.getName() +  '.' + searchedEntity.getPrimaryKey().getName());
         selectQueryBuilder.addEqualCondition(entity.getName() + '.' + entity.getPrimaryKey().getName(), entityPrimaryKeyValue);
 
         //  SELECT produit.id, produit.nom, produit.prix

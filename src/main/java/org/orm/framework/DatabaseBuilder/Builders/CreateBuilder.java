@@ -206,7 +206,7 @@ public class CreateBuilder implements StategyBuilder {
                 .getPrimaryKey();
 
         PrimaryKey firstPrimaryKey = new PrimaryKey();
-        firstPrimaryKey.setName(firstTable + '_' + primaryKeyOfFirstEntity.getName());
+        firstPrimaryKey.setName(lastTableName + '_' + primaryKeyOfFirstEntity.getName());
         firstPrimaryKey.setType(primaryKeyOfFirstEntity.getType());
         firstPrimaryKey.setOriginalName(primaryKeyOfFirstEntity.getOriginalName());
         firstPrimaryKey.setAutoIncrement(primaryKeyOfFirstEntity.isAutoIncrement());
@@ -214,13 +214,15 @@ public class CreateBuilder implements StategyBuilder {
         firstPrimaryKey.setDbType(primaryKeyOfFirstEntity.getDbType());
 
         PrimaryKey lastPrimaryKey = new PrimaryKey();
-        lastPrimaryKey.setName(lastTableName + '_' + primaryKeyOfLastEntity.getName());
+        lastPrimaryKey.setName(firstTable + '_' + primaryKeyOfLastEntity.getName());
         lastPrimaryKey.setType(primaryKeyOfLastEntity.getType());
         lastPrimaryKey.setOriginalName(primaryKeyOfLastEntity.getOriginalName());
         lastPrimaryKey.setAutoIncrement(primaryKeyOfLastEntity.isAutoIncrement());
         lastPrimaryKey.setLength(primaryKeyOfLastEntity.getLength());
         lastPrimaryKey.setDbType(primaryKeyOfLastEntity.getDbType());
 
+        System.out.println(firstPrimaryKey.getName());
+        System.out.println(lastPrimaryKey.getName());
 
         String createTableSyntax = dialect.getCreateTableSyntax(((ManyToMany)relation).getTableName(), List.of(), List.of(firstPrimaryKey, lastPrimaryKey));
 

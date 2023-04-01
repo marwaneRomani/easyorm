@@ -83,7 +83,7 @@ public class Find<T> {
         values = new Object[] { values[2] };
 
         try {
-            return template.queryForList(query, entity, values);
+            return template.queryForList(query, searchedEntity, values);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

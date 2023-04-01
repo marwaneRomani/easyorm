@@ -2,7 +2,7 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/SocialNetwork",
+    "url": "jdbc:mysql://localhost/Social",
     "username": "root",
     "password": "134194630",
     "strategy": "update",

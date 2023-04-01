@@ -246,9 +246,10 @@ public class SaveUtils<T> {
 
                         Object primaryKey = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
 
-                        queryBuilder.column(entity.getPrimaryKey().getName()).value(primaryKey);
+                        queryBuilder.column(entity.getName() + '_' + entity.getPrimaryKey().getName()).value(primaryKey);
+
                         queryBuilder
-                                .column(EntitiesDataSource.getModelsSchemas().get(attribute.getGenericType()).getPrimaryKey().getName())
+                                .column(EntitiesDataSource.getModelsSchemas().get(attribute.getGenericType()).getName() + '_' + EntitiesDataSource.getModelsSchemas().get(attribute.getGenericType()).getPrimaryKey().getName())
                                 .value(GettersInvoke.getPrimaryKeyValue(EntitiesDataSource.getModelsSchemas().get(attribute.getGenericType()).getPrimaryKey(), obj));
 
                         String sql = queryBuilder.build();

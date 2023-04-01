@@ -18,47 +18,22 @@ public class Main {
         Filiere abd = new Filiere("ABD", "abd == hachemoud");
         Filiere asr = new Filiere("ASR", "asr == Khartouch");
 
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(gl);
-
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(asr);
-
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(abd);
 
 
         ChefFilliere ibriz = new ChefFilliere(1l, "Ibriz", List.of(gl, abd));
         ChefFilliere khartoch = new ChefFilliere(2l, "Khartoch", List.of(asr));
 
 
-        OrmApplication
-                .buildObject(ChefFilliere.class)
-                .save(ibriz);
-
-        OrmApplication
-                .buildObject(ChefFilliere.class)
-                .save(khartoch);
-
-
         Userr houssam = new Userr("123456789", "1234567", "Houssam", "houssam@example.com", "Houssam", 20, asr, List.of(asr, gl));
-        Userr marwane = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Romani", 20, gl, List.of(asr, gl));
-        Userr enzeo = new Userr("185444554", "1234567", "Enzo", "enzo@example.com", "enzo", 20, abd, List.of(asr, abd));
-        Userr oussama = new Userr("155778877", "1234567", "Oussama", "oussama@example.com", "Amrani", 20, gl, List.of(asr, abd, gl));
+        Userr marwane = new Userr("134794630", "1234567", "Marwane", "marwane@example.com", "Romani",  20, gl,  List.of(asr, gl));
+        Userr enzeo   = new Userr("185444554", "1234567", "Enzo",    "enzo@example.com",    "enzo",    20, abd, List.of(asr, abd));
+        Userr oussama = new Userr("155778877", "1234567", "Oussama", "oussama@example.com", "Amrani",  20, gl,  List.of(asr, abd, gl));
 
         List<Userr> users = new ArrayList<>();
         users.add(houssam);
         users.add(marwane);
         users.add(enzeo);
         users.add(oussama);
-
-        for (Userr user : users)
-            OrmApplication
-                    .buildObject(Userr.class)
-                    .save(user);
 
 
         Post post0 = new Post(1l, "HOW HTTP REQUEST HANDELED BY NODE", new Date(), marwane);
@@ -79,36 +54,81 @@ public class Main {
         posts.add(post5);
 
 
-        for (Post post : posts)
-            OrmApplication
-                    .buildObject(Post.class)
-                    .save(post);
-
-
         Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
         Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
         Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
         Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
 
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message0);
 
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message1);
+        // --------------------------------------------------------------------------
 
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message2);
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(gl);
+//
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(asr);
+//
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(abd);
+//
+//        OrmApplication
+//                .buildObject(ChefFilliere.class)
+//                .save(ibriz);
+//
+//        OrmApplication
+//                .buildObject(ChefFilliere.class)
+//                .save(khartoch);
+//
+//        for (Userr user : users)
+//            OrmApplication
+//                    .buildObject(Userr.class)
+//                    .save(user);
+//
+//        for (Post post : posts)
+//            OrmApplication
+//                    .buildObject(Post.class)
+//                    .save(post);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message0);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message1);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message2);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message3);
+    // ---------------------------------------------------------------------
 
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message3);
+        Userr OussamaGL = OrmApplication
+                .buildObject(Userr.class)
+                .findOne()
+                .where("cin", "=", "155778877")
+                .and("name", "=", "Oussama")
+                .execute()
+                .get("filiere")
+                .get("particapationFilieres")
+                .buildObject();
 
+        Filiere GL = OrmApplication
+                .buildObject(Filiere.class)
+                .findById("GL")
+                .get("chefFilliere")
+                .get("students")
+                .get("participatedUsers")
+                .buildObject();
 
+        System.out.println(GL);
     }
-
 }
 
 

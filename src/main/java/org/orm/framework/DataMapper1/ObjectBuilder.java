@@ -260,7 +260,11 @@ public class ObjectBuilder<T> {
                         });
                     } else {
                         Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
-                        findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
+                        List<Object> fromManyToManyRelation = findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
+                        System.out.println(fromManyToManyRelation);
+
+                        SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, fromManyToManyRelation);
+
                     }
 
                 }
