@@ -2,7 +2,7 @@
 
 help you to develop any kind of application that uses databases - from small applications with a few tables to large scale enterprise applications with multiple databases
 
-EasyORM is highly influenced by other ORMs, such as [Hibernate](http://hibernate.org/orm/), TypeORM and [Entity Framework](https://www.asp.net/entity-framework) 
+EasyORM is highly influenced by other ORMs, such as [Hibernate](http://hibernate.org/orm/), [TypeORM](https://typeorm.io/) and [Entity Framework](https://www.asp.net/entity-framework) 
 
 # Features
 
@@ -41,18 +41,21 @@ public class User {
     public User() {
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getNic() { 
-				return nic; 
-		}
+    public String getNic() {
+        return nic;
+    }
 
     public void setNic(String nic) {
         this.nic = nic;
     }
-
     public String getFirstName() {
         return firstName;
     }
@@ -79,7 +82,7 @@ public class User {
 }
 ```
 
-Or you customize you fields with specefic annotaions
+Or you customize you fields with specific annotaions
 
 ```java
 public class User {
@@ -95,16 +98,21 @@ public class User {
     public User() {
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getNic() { return nic; }
+    public String getNic() {
+        return nic;
+    }
 
     public void setNic(String nic) {
         this.nic = nic;
     }
-
     public String getFirstName() {
         return firstName;
     }
@@ -150,7 +158,7 @@ public class Message {
     private Date date;
     private Boolean seen;
 
-	  // relations with User table
+    // relations with User table
     private User sender;
     private User receiver;
 
@@ -158,6 +166,16 @@ public class Message {
 
     }
 
+    // we can add other constructors
+    public Message(Long id, String content, Date date, Boolean seen, User sender, User receiver) {
+        this.id = id;
+        this.content = content;
+        this.date = date;
+        this.seen = seen;
+        this.sender = sender;
+        this.receiver = receiver;
+    }
+	
     public Long getId() {
         return id;
     }
@@ -232,21 +250,17 @@ public class User {
     public User() {
     }
 	
-		// we can add other constructors
-		public Message(Long id, String message, Date date, Boolean seen, User sender, User receiver) {
-        this.id = id;
-        this.content = message;
-        this.date = date;
-        this.seen = seen;
-        this.sender = sender;
-        this.receiver = receiver;
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getId() { return id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public void setId(Integer id) { this.id = id; }
-
-    public String getNic() { return nic; }
+    public String getNic() {
+        return nic;
+    }
 
     public void setNic(String nic) {
         this.nic = nic;
@@ -291,25 +305,26 @@ Now we are ready to persist our object and execute some queries
 ```java
 // the user id is auto increment value
 User Oussama = new User();
-        Oussama.setNic("Abcd123");
-        Oussama.setFirstName("Oussama");
-        Oussama.setLastName("EL-Amrani");
-				Oussama.setBirthDay(new Date(2002,9, 1));
+
+     Oussama.setNic("Abcd123");
+     Oussama.setFirstName("Oussama");
+     Oussama.setLastName("EL-Amrani");
+     Oussama.setBirthDay(new Date(2002,9, 1));
         
 User Marwane = new User();
-        Marwane.setNic("Abcd123");
-        Marwane.setFirstName("Marwane");
-        Marwane.setLastName("Romani");
-				Marwane.setBirthDay(new Date(2002, 9, 9));
+     Marwane.setNic("Abcd123");
+     Marwane.setFirstName("Marwane");
+     Marwane.setLastName("Romani");
+     Marwane.setBirthDay(new Date(2002, 9, 9));
 
 // save new users to the database
-        OrmApplication
-                .buildObject(User.class)
-                .save(Oussama);
-        
-        OrmApplication
-                .buildObject(User.class)
-                .save(Marwane);
+EasyORM
+     .buildObject(User.class)
+     .save(Oussama);
+
+EasyORM
+     .buildObject(User.class)
+     .save(Marwane);
 ```
 
 we can also save new messages and each message will have a sender and receiver
@@ -317,7 +332,7 @@ we can also save new messages and each message will have a sender and receiver
 ```java
 Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,Marwane, Oussama);
 
-OrmApplication
+EasyORM
      .buildObject(Message.class)
      .save(message);
 ```
@@ -331,7 +346,7 @@ We can execute find queries
 We can look for a user by his id
 
 ```java
-User userFromDb = OrmApplication
+User userFromDb = EasyORM
 	                 .buildObject(User.class)
 	                 .findById(1)
 	                 .buildObject();
@@ -340,9 +355,9 @@ User userFromDb = OrmApplication
 Or
 
 ```java
-User userFromDb = OrmApplication
+User userFromDb = EasyORM
 	                .buildObject(User.class)
-	                .findOne()
+                        .findOne()
 	                .where("name", "=" ,"Oussama")
 	                .execute()
 	                .buildObject();
@@ -351,19 +366,19 @@ User userFromDb = OrmApplication
 We can also look for all users 
 
 ```java
-List<User> listOfUsersFromDB = OrmApplication
-							                .buildObject(User.class)
-							                .findAll()
-							                .buildObjects();
+List<User> listOfUsersFromDB = EasyORM
+                              .buildObject(User.class)
+                              .findAll()
+                              .buildObjects();
 ```
 
 Or we can add a search criteria to our query
 
 ```java
-List<Message> messages = OrmApplication
-					                .buildObject(User.class)
-						              .findMany()
-						              .where("content", "like","%Marwane%")
-						              .execute()
-						              .buildObjects();
+List<Message> messages = EasyORM
+                          .buildObject(User.class)
+                          .findMany()
+                          .where("content", "like","%Marwane%")
+                          .execute()
+                          .buildObjects();
 ```
