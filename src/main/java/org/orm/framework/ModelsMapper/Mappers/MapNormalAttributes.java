@@ -234,7 +234,7 @@ public class MapNormalAttributes {
             case "Double":
                 return "DOUBLE";
             case "String":
-                return "VARCHAR(45)";
+                return "VARCHAR(100)";
             case "Date":
                 return "DATE";
             }
