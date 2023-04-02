@@ -178,42 +178,27 @@ public class ObjectBuilder<T> {
 
 
     public ObjectBuilder<T> get(String relationName) {
-        try {
-            ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
-            Connection connection = pool.getConnection();
+        if (object != null || objects != null) {
+            try {
+                ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
+                Connection connection = pool.getConnection();
 
-            Attribute attribute = FindAttribute.find(entity, relationName);
-            Relation relation = FindAttributeRelation.find(attribute, entity);
+                Attribute attribute = FindAttribute.find(entity, relationName);
+                Relation relation = FindAttributeRelation.find(attribute, entity);
 
-            Entity attributeEntity = EntitiesDataSource
-                    .getModelsSchemas()
-                    .get((attribute instanceof AttributeList) ? ((AttributeList) attribute).getGenericType() : attribute.getType() );
+                Entity attributeEntity = EntitiesDataSource
+                        .getModelsSchemas()
+                        .get((attribute instanceof AttributeList) ? ((AttributeList) attribute).getGenericType() : attribute.getType() );
 
-            Class<?> attributeClass = attributeEntity.getModel();
+                Class<?> attributeClass = attributeEntity.getModel();
 
-            Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
+                Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
 
-            if (attribute instanceof AttributeList) {
-                if (relation instanceof OneToMany) {
-                    if(!isFindOneMethod) {
-                        objects.forEach( object_ -> {
-                            // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
-                            System.out.println(object_ + "9bl");
-                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
-
-                            List<?> foundObjects = OrmApplication
-                                    .buildObject(attributeClass)
-                                    .findMany()
-                                    .where(relation.getOne().getName(), "=", primaryKeyValue)
-                                    .execute()
-                                    .buildObjects();
-
-                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, foundObjects);
-                        });
-                    } else {
-                        if (!isFindOneMethod) {
-                            objects.forEach(object_ -> {
+                if (attribute instanceof AttributeList) {
+                    if (relation instanceof OneToMany) {
+                        if(!isFindOneMethod) {
+                            objects.forEach( object_ -> {
                                 // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
                                 System.out.println(object_ + "9bl");
                                 Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
@@ -228,77 +213,106 @@ public class ObjectBuilder<T> {
                                 SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, foundObjects);
                             });
                         } else {
-                            // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
-                            System.out.println(object + "9bl");
-                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+                            if (!isFindOneMethod) {
+                                objects.forEach(object_ -> {
+                                    // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
+                                    System.out.println(object_ + "9bl");
+                                    Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
 
-                            List<?> foundObjects = OrmApplication
-                                    .buildObject(attributeClass)
-                                    .findMany()
-                                    .where(relation.getOne().getName(), "=", primaryKeyValue)
-                                    .execute()
-                                    .buildObjects();
+                                    List<?> foundObjects = OrmApplication
+                                            .buildObject(attributeClass)
+                                            .findMany()
+                                            .where(relation.getOne().getName(), "=", primaryKeyValue)
+                                            .execute()
+                                            .buildObjects();
 
-                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, foundObjects);
+                                    SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, foundObjects);
+                                });
+                            } else {
+                                // query exaple:  Select cin, name, age from `user`  WHERE  user.filiere = "GL";
+                                System.out.println(object + "9bl");
+                                Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+
+                                List<?> foundObjects = OrmApplication
+                                        .buildObject(attributeClass)
+                                        .findMany()
+                                        .where(relation.getOne().getName(), "=", primaryKeyValue)
+                                        .execute()
+                                        .buildObjects();
+
+                                SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, foundObjects);
+                            }
+
                         }
 
                     }
+                    else {
+                        // ManyToMany
+                        // Query Example :
+                        //  SELECT produit.id, produit.nom, produit.prix
+                        //  FROM commande_produit, commande, produit
+                        //  WHERE commande.id = commande_produit.commande_id
+                        //        AND produit.id = commande_produit.produit_id
+                        //        AND commande.id = 1
+                        if (!isFindOneMethod) {
+                            objects.forEach(object_ -> {
+                                Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
+                                List<Object> fromManyToManyRelation = findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
 
-                }
-                else {
-                    // ManyToMany
-                    // Query Example :
-                    //  SELECT produit.id, produit.nom, produit.prix
-                    //  FROM commande_produit, commande, produit
-                    //  WHERE commande.id = commande_produit.commande_id
-                    //        AND produit.id = commande_produit.produit_id
-                    //        AND commande.id = 1
-                    if (!isFindOneMethod) {
-                        objects.forEach(object_ -> {
-                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
+                                SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, fromManyToManyRelation);
+                            });
+                        } else {
+                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
                             List<Object> fromManyToManyRelation = findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
+                            System.out.println(fromManyToManyRelation);
 
-                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, fromManyToManyRelation);
-                        });
-                    } else {
-                        Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
-                        List<Object> fromManyToManyRelation = findObject.findFromManyToManyRelation(attributeEntity, entity, relation, primaryKeyValue);
-                        System.out.println(fromManyToManyRelation);
+                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, fromManyToManyRelation);
 
-                        SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, fromManyToManyRelation);
+                        }
 
                     }
-
                 }
-            }
-            else {
-                if (relation instanceof OneToMany) {
+                else {
+                    if (relation instanceof OneToMany) {
 
-                    if (!isFindOneMethod) {
-                        objects.forEach(object_ -> {
+                        if (!isFindOneMethod) {
+                            objects.forEach(object_ -> {
+                                //Query example Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
+                                Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
+
+                                Object relationObject = findObject.findForeignKey(entity, primaryKeyValue, attributeEntity, attribute.getName());
+                                System.out.println(relationObject);
+
+                                SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, relationObject);
+                            });
+                        } else {
                             //Query example Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
-                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object_);
+
+                            Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
 
                             Object relationObject = findObject.findForeignKey(entity, primaryKeyValue, attributeEntity, attribute.getName());
                             System.out.println(relationObject);
 
-                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object_, relationObject);
-                        });
-                    } else {
-                        //Query example Select * from filiere WHERE  filiere.nom = (SELECT filiere  from `user` u WHERE  u.cin = "123456789")
+                            SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, relationObject);
+                        }
 
-                        Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
-
-                        Object relationObject = findObject.findForeignKey(entity, primaryKeyValue, attributeEntity, attribute.getName());
-                        System.out.println(relationObject);
-
-                        SettersInvoke.setRelationalAttribute(attributeEntity, attribute, object, relationObject);
                     }
+                    else  {
+                        if (!isFindOneMethod) {
+                            objects.forEach(object_ -> {
+                                // Query example : Select * from `user`  WHERE  user.filiere = "GL";
+                                Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
 
-                }
-                else  {
-                    if (!isFindOneMethod) {
-                        objects.forEach(object_ -> {
+                                Object o = OrmApplication
+                                        .buildObject(attributeClass)
+                                        .findOne()
+                                        .where(relation.getOne().getName(), "=", primaryKeyValue)
+                                        .execute()
+                                        .buildObject();
+
+                                System.out.println(o);
+                            });
+                        } else {
                             // Query example : Select * from `user`  WHERE  user.filiere = "GL";
                             Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
 
@@ -310,30 +324,19 @@ public class ObjectBuilder<T> {
                                     .buildObject();
 
                             System.out.println(o);
-                        });
-                    } else {
-                        // Query example : Select * from `user`  WHERE  user.filiere = "GL";
-                        Object primaryKeyValue = GettersInvoke.getPrimaryKeyValue(entity.getPrimaryKey(), object);
+                        }
 
-                        Object o = OrmApplication
-                                .buildObject(attributeClass)
-                                .findOne()
-                                .where(relation.getOne().getName(), "=", primaryKeyValue)
-                                .execute()
-                                .buildObject();
-
-                        System.out.println(o);
                     }
-
                 }
+
+                pool.releaseConnection(connection);
+
+                return this;
+            } catch (ORMException | SQLException e) {
+                throw new RuntimeException(e);
             }
-
-            pool.releaseConnection(connection);
-
-            return this;
-        } catch (ORMException | SQLException e) {
-            throw new RuntimeException(e);
         }
+        return this;
     }
 
     public T buildObject() {
