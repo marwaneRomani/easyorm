@@ -74,7 +74,7 @@ public class MapRelations {
 
         Attribute first = mappedAttr.stream().findFirst().orElse(null);
         if (first == null) {
-            throw new ORMException("the mapping relation of this attribute was not set in " +  referencedEntity);
+            throw new ORMException("the mapping relation of this attribute was not set in " +  attribute.getName() + "in the model " + referencedEntity);
         }
 
         first.mapp(true);

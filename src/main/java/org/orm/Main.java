@@ -52,10 +52,10 @@ public class Main {
         posts.add(post5);
 
 
-        Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
-        Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
-        Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
-        Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
+//        Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
+//        Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
+//        Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
+//        Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
 
 
 
@@ -111,7 +111,7 @@ public class Main {
 
 
 // find data -----------------------------------------------------------------------------
-
+        
         Userr OussamaGL = OrmApplication
                 .buildObject(Userr.class)
                 .findOne()
@@ -120,6 +120,7 @@ public class Main {
                 .execute()
                 .get("filiere")
                 .get("particapationFilieres")
+                .get("receivedMessages")
                 .buildObject();
 
         System.out.println(OussamaGL);
@@ -133,6 +134,52 @@ public class Main {
                 .buildObject();
 
         System.out.println(GL);
+
+//        User Oussama = new User();
+//        Oussama.setNic("Abcd123");
+//        Oussama.setFirstName("Oussama");
+//        Oussama.setLastName("EL-Amrani");
+//        Oussama.setBirthDay(new Date(2002,9, 1));
+//
+//        User Marwane = new User();
+//        Marwane.setNic("Abcd123");
+//        Marwane.setFirstName("Marwane");
+//        Marwane.setLastName("Romani");
+//        Marwane.setBirthDay(new Date(2002, 9, 9));
+//
+//        OrmApplication
+//                .buildObject(User.class)
+//                .save(Oussama);
+//
+//        OrmApplication
+//                .buildObject(User.class)
+//                .save(Marwane);
+
+//        Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,Marwane, Oussama);
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message);
+//
+//        User user1 = OrmApplication
+//                .buildObject(User.class)
+//                .findById(1)
+//                .buildObject();
+//
+//        User user1 = OrmApplication
+//                .buildObject(User.class)
+//                .findOne()
+//                .where("name", "=" ,"Oussama")
+//                .execute()
+//                .buildObject();
+//
+//        User user1 = OrmApplication
+//                .buildObject(User.class)
+//                .findAll()
+//                .buildObject();
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .findMany()
 
     }
 

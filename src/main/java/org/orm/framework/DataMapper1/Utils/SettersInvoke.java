@@ -21,7 +21,7 @@ public class SettersInvoke {
                                                     .toUpperCase() +
                                             attribute.getOriginalName()
                                                     .substring(1),
-                                    Class.forName("java.lang." + attribute.getType())
+                                    Class.forName("java." + (attribute.getType().equals("Date") ? "util." : "lang." ) + attribute.getType())
                             );
             try {
                 setterOfAttribute.invoke(object,newValue);
@@ -66,7 +66,7 @@ public class SettersInvoke {
                                             .toUpperCase() +
                                     primaryKey.getOriginalName()
                                             .substring(1),
-                            Class.forName("java.lang." + primaryKey.getType())
+                            Class.forName("java." + (primaryKey.getType().equals("Date") ? "util." : "lang." ) + primaryKey.getType())
                     );
             setterOfAttribute.invoke(object, newValue);
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
