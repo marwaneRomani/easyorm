@@ -125,15 +125,15 @@ public class Main {
 
         System.out.println(OussamaGL);
 
-        Filiere GL = OrmApplication
-                .buildObject(Filiere.class)
-                .findById("GL")
-                .get("chefFilliere")
-                .get("students")
-                .get("participatedUsers")
-                .buildObject();
-
-        System.out.println(GL);
+//        Filiere GL = OrmApplication
+//                .buildObject(Filiere.class)
+//                .findById("GL")
+//                .get("chefFilliere")
+//                .get("students")
+//                .get("participatedUsers")
+//                .buildObject();
+//
+//        System.out.println(GL);
 
 //        User Oussama = new User();
 //        Oussama.setNic("Abcd123");

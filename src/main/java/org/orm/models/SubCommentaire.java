@@ -3,7 +3,7 @@ package org.orm.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.orm.framework.ModelsMapper.Annotations.Id;
+import org.orm.framework.modelsmapper.annotations.Id;
 
 import java.util.Date;
 
