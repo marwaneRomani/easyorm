@@ -60,54 +60,54 @@ public class Main {
 
 
 // save data ----------------------------------------------------------------------
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .save(gl);
-//
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .save(asr);
-//
-//        OrmApplication
-//                .buildObject(Filiere.class)
-//                .save(abd);
-//
-//
-//        OrmApplication
-//                .buildObject(ChefFilliere.class)
-//                .save(ibriz);
-//
-//        OrmApplication
-//                .buildObject(ChefFilliere.class)
-//                .save(khartoch);
-//
-//
-//        for (Userr user : users)
-//            OrmApplication
-//                    .buildObject(Userr.class)
-//                    .save(user);
-//
-//
-//        for (Post post : posts)
-//            OrmApplication
-//                    .buildObject(Post.class)
-//                    .save(post);
-//
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message0);
-//
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message1);
-//
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message2);
-//
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message3);
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(gl);
+
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(asr);
+
+        OrmApplication
+                .buildObject(Filiere.class)
+                .save(abd);
+
+
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(ibriz);
+
+        OrmApplication
+                .buildObject(ChefFilliere.class)
+                .save(khartoch);
+
+
+        for (Userr user : users)
+            OrmApplication
+                    .buildObject(Userr.class)
+                    .save(user);
+
+
+        for (Post post : posts)
+            OrmApplication
+                    .buildObject(Post.class)
+                    .save(post);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message0);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message1);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message2);
+
+        OrmApplication
+                .buildObject(Message.class)
+                .save(message3);
 
 
 // find data -----------------------------------------------------------------------------

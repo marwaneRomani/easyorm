@@ -1,10 +1,10 @@
 package org.orm.framework;
 
-import org.orm.framework.ApplicationState.ApplicationState;
-import org.orm.framework.ConnectionsPool.ConnectionPool;
-import org.orm.framework.DataMapper1.ObjectBuilder;
-import org.orm.framework.DatabaseBuilder.DatabaseBuilder;
-import org.orm.framework.ModelsMapper.ModelsMapper;
+import org.orm.framework.applicationstate.ApplicationState;
+import org.orm.framework.connectionpool.ConnectionPool;
+import org.orm.framework.datamapper1.ObjectBuilder;
+import org.orm.framework.databasebuilder.DatabaseBuilder;
+import org.orm.framework.modelsmapper.ModelsMapper;
 
 import java.sql.Connection;
 

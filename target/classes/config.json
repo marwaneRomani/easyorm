@@ -5,7 +5,7 @@
     "url": "jdbc:mysql://localhost/Media",
     "username": "root",
     "password": "134194630",
-    "strategy": "update",
+    "strategy": "create",
     "dialect" : "mysql",
     "fk_modified": "cascade"
   },
