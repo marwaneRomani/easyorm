@@ -50,6 +50,11 @@ public class ConfigReader {
             return Integer.parseInt(connectionPoolConfig.get("maxSize").toString());
         }
 
+        public String getFkStrategy() {
+            JSONObject dbConfig = (JSONObject) jsonObject.get("database");
+            return dbConfig.get("fk_modified").toString();
+        }
+
         public boolean isCacheEnabled() {
             JSONObject cacheConfig = (JSONObject) jsonObject.get("cache");
             return (boolean) cacheConfig.get("enabled");

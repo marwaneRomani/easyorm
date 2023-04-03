@@ -52,10 +52,10 @@ public class Main {
         posts.add(post5);
 
 
-//        Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
-//        Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
-//        Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
-//        Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
+        Message message0 = new Message(1l, "helle Oussama how are you", new Date() , true ,marwane, oussama);
+        Message message1 = new Message(2l, "Afen akhay mzyan", new Date() , true ,houssam, oussama);
+        Message message2 = new Message(3l, "hi how are you", new Date() , true ,enzeo, oussama);
+        Message message3 = new Message(4l, "helle again", new Date() , true ,marwane, oussama);
 
 
 
@@ -134,6 +134,12 @@ public class Main {
                 .buildObject();
 
         System.out.println(GL);
+
+        ChefFilliere deletedById = OrmApplication
+                .buildObject(ChefFilliere.class)
+                .deleteById(2);
+
+        System.out.println(deletedById);
 
 //        User Oussama = new User();
 //        Oussama.setNic("Abcd123");

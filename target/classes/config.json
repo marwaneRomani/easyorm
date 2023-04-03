@@ -2,18 +2,14 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/Social",
+    "url": "jdbc:mysql://localhost/Media",
     "username": "root",
     "password": "134194630",
     "strategy": "update",
-    "dialect" : "mysql"
+    "dialect" : "mysql",
+    "fk_modified": "cascade"
   },
   "connectionPool": {
     "maxSize": 10
-  },
-  "cache": {
-    "enabled": true,
-    "maxSize": 1000,
-    "expireAfter": 3600
   }
 }

@@ -119,10 +119,18 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         }
     }
 
-    private void prepareStatement(PreparedStatement query, Object[] params) {
+    @Override
+    public int nonQuery(String query, Object[] params) {
         try {
-            fillPreparedStatement(query,params);
-        } catch (SQLException e) {
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            if (params != null)
+                fillPreparedStatement(ps,params);
+
+            int result = ps.executeUpdate();
+
+            return result;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

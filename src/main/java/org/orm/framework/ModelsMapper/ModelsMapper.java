@@ -31,20 +31,20 @@ public class ModelsMapper {
 
     private static void mapNormalAttributes(List<Class<?>> models) {
         models
-           .forEach((model) -> {
-                Entity entity = new Entity(model);
-                if (Modifier.isAbstract(model.getModifiers()))
-                    entity.setAbstract(true);
+                .forEach((model) -> {
+                    Entity entity = new Entity(model);
+                    if (Modifier.isAbstract(model.getModifiers()))
+                        entity.setAbstract(true);
 
-               try {
-                   MapNormalAttributes.mapModels(entity);
-               } catch (ORMException e) {
-                   e.printStackTrace();
-                   throw new RuntimeException(e);
-               }
-               EntitiesDataSource
-                        .getModelsSchemas()
-                        .put(model.getSimpleName(), entity);
+                    try {
+                        MapNormalAttributes.mapModels(entity);
+                    } catch (ORMException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                    EntitiesDataSource
+                            .getModelsSchemas()
+                            .put(model.getSimpleName(), entity);
                 });
 
     }

@@ -20,7 +20,7 @@ public class ApplicationState {
     private String password;
     private String strategy;
     private String dialect ;
-
+    private String fkStrategy;
     private Integer connectionPoolMaxSize;
 
     private Boolean isCacheEnabled;
@@ -56,10 +56,12 @@ public class ApplicationState {
             dialect = configReader.getDialect();
 
             connectionPoolMaxSize = configReader.getConnectionPoolMaxSize();
+            fkStrategy = configReader.getFkStrategy();
 
-            isCacheEnabled = configReader.isCacheEnabled();
-            cacheMaxSize = configReader.getCacheMaxSize();
-            cacheExpireAfter = configReader.getCacheExpireAfter();
+
+//            isCacheEnabled = configReader.isCacheEnabled();
+//            cacheMaxSize = configReader.getCacheMaxSize();
+//            cacheExpireAfter = configReader.getCacheExpireAfter();
 
 
         } catch (IOException | ParseException e) {
@@ -107,4 +109,6 @@ public class ApplicationState {
     public String getDialect() { return dialect; }
 
     public void setDialect(String dialect) { this.dialect = dialect; }
+
+    public String getFkStrategy() { return fkStrategy; }
 }

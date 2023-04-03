@@ -1,7 +1,7 @@
 package org.orm.framework.DataMapper.ObjectBuilders.find;
 
 import org.orm.framework.DataMapper1.methods.Query;
-import org.orm.framework.DataMapper.QueryBuilders.SelectQueryBuilder;
+import org.orm.framework.DataMapper1.QueryBuilders.SelectQueryBuilder;
 import org.orm.framework.EntitiesDataSource.Entity;
 
 public class FindBuilder {

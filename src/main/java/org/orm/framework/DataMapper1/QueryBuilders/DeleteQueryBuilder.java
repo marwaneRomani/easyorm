@@ -1,16 +1,17 @@
-package org.orm.framework.DataMapper.QueryBuilders;
+package org.orm.framework.DataMapper1.QueryBuilders;
 
 import org.orm.framework.DataMapper1.methods.Query;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SelectQueryBuilder {
-    private List<String> tables = new ArrayList<>();
-    private List<String> columns = new ArrayList<>();
-
-
+public class DeleteQueryBuilder {
+    private String tableName;
     private List<String> conditions = new ArrayList<>();
     private List<ConditionType> conditionsType = new ArrayList<>();
+
+    private Boolean chainConditionsFLag = false;
+
 
     private enum ConditionType {
         EQUAL,
@@ -26,20 +27,12 @@ public class SelectQueryBuilder {
 
     private List<String> chains = new ArrayList<>();
 
-    private Integer limit;
-    private String orderBy;
-
-    public SelectQueryBuilder setTable(String table) {
-        tables.add(table);
-        return this;
+    public DeleteQueryBuilder(String tableName) {
+        this.tableName = tableName;
     }
 
-    public SelectQueryBuilder addColumn(String column) {
-        columns.add(column);
-        return this;
-    }
 
-    public SelectQueryBuilder addEqualCondition(String condition, Object value) {
+    public DeleteQueryBuilder addEqualCondition(String condition, Object value) {
         //equalConditions.add(condition);
         conditions.add(condition);
         conditionsType.add(ConditionType.EQUAL);
@@ -47,7 +40,7 @@ public class SelectQueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder addLikeCondition(String condition, Object value) {
+    public DeleteQueryBuilder addLikeCondition(String condition, Object value) {
         //equalConditions.add(condition);
         conditions.add(condition);
         conditionsType.add(ConditionType.LIKE);
@@ -56,14 +49,15 @@ public class SelectQueryBuilder {
     }
 
 
-    public SelectQueryBuilder addNotEqualCondition(String condition, Object value) {
+    public DeleteQueryBuilder addNotEqualCondition(String condition, Object value) {
         //notEqualConditions.add(condition);
         conditions.add(condition);
         conditionsType.add(ConditionType.NOTEQUAL);
         conditionsValues.add(value);
         return this;
     }
-    public SelectQueryBuilder addGreaterThenCondition(String condition, Object value) {
+
+    public DeleteQueryBuilder addGreaterThenCondition(String condition, Object value) {
         //greaterThenConditions.add(condition);
         conditions.add(condition);
         conditionsType.add(ConditionType.GREATERTHEN);
@@ -71,7 +65,8 @@ public class SelectQueryBuilder {
 
         return this;
     }
-    public SelectQueryBuilder addLessThenCondition(String condition, Object value) {
+
+    public DeleteQueryBuilder addLessThenCondition(String condition, Object value) {
 //        lessThenConditions.add(condition);
         conditions.add(condition);
         conditionsType.add(ConditionType.LESSTHEN);
@@ -80,26 +75,9 @@ public class SelectQueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder addChainOperation(String chain) {
-        chains.add(chain);
-
-        return this;
-    }
-
-    public SelectQueryBuilder setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-        return this;
-    }
-
-    public SelectQueryBuilder setLimit(Integer limit) {
-        this.limit = limit;
-
-        return this;
-    }
-
 
     public Query build() {
-        QueryBuilder queryBuilder = new QueryBuilder(tables, columns, conditions, conditionsType, conditionsValues,limit,orderBy, chains);
+        QueryBuilder queryBuilder = new QueryBuilder(conditions, conditionsType, conditionsValues,chains);
         String sql = queryBuilder.toSql();
 
         for (int i = 0; i < chains.size(); i++) {
@@ -111,9 +89,13 @@ public class SelectQueryBuilder {
         return new Query(sql, values);
     }
 
+
+    public Object[] getValues() {
+        return null;
+    }
+
+
     public class QueryBuilder {
-        private List<String> tables;
-        private List<String> columns;
 
         private List<String> conditions;
         private List<ConditionType> conditionTypes;
@@ -125,29 +107,17 @@ public class SelectQueryBuilder {
         private String orderBy;
         private Boolean chainConditionsFLag = false;
 
-        public QueryBuilder(List<String> tables, List<String> columns, List<String> conditions, List<ConditionType> conditionTypes ,List<Object> conditionsValues ,Integer limit, String orderBy, List<String> chains) {
-            this.tables = tables;
-            this.columns = columns;
+        private QueryBuilder(List<String> conditions, List<ConditionType> conditionTypes , List<Object> conditionsValues , List<String> chains) {
             this.conditions = conditions;
             this.conditionsValues = conditionsValues;
             this.conditionTypes = conditionTypes;
             this.chains = chains;
-            this.limit = limit;
-            this.orderBy = orderBy;
         }
 
         public String toSql() {
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT ");
-
-            if (columns.isEmpty()) {
-                //TODO
-            } else {
-                builder.append(String.join(",", columns));
-            }
-
-            builder.append(" FROM ");
-            builder.append(String.join(",", tables));
+            builder.append("DELETE FROM ")
+                   .append(tableName);
 
             if (!conditions.isEmpty()) {
                 builder.append(" WHERE ");
@@ -158,8 +128,8 @@ public class SelectQueryBuilder {
                     ConditionType conditionType = conditionTypes.get(i);
 
                     if (conditionType.equals(ConditionType.EQUAL)) {
-                            builder.append(condition  + " = ? ");
-                            chainConditionsFLag = true;
+                        builder.append(condition  + " = ? ");
+                        chainConditionsFLag = true;
                     } else if (conditionType.equals(ConditionType.LIKE)) {
                         //TODO REFACTOR THE LIKE SYNTAX BASED ON DBMS
                         builder.append(condition  + " LIKE ? ");
@@ -177,7 +147,6 @@ public class SelectQueryBuilder {
                         builder.append(condition  + " < ? ");
                         chainConditionsFLag = true;
                     }
-
                 }
             }
 
@@ -209,4 +178,7 @@ public class SelectQueryBuilder {
         }
 
     }
+
+
+
 }

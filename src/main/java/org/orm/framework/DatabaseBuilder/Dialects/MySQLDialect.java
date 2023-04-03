@@ -1,5 +1,6 @@
 package org.orm.framework.DatabaseBuilder.Dialects;
 
+import org.orm.framework.ApplicationState.ApplicationState;
 import org.orm.framework.ModelsMapper.FieldsMapper.Attribute.Attribute;
 import org.orm.framework.ModelsMapper.FieldsMapper.PrimaryKey.PrimaryKey;
 
@@ -98,6 +99,11 @@ public class MySQLDialect implements Dialect {
         }
         builder.delete(builder.length() - 2, builder.length()); // remove last comma and space
         builder.append(")");
+
+        String fkStrategy = ApplicationState.getState().getFkStrategy();
+
+        builder.append(" ON UPDATE CASCADE ON DELETE SET NULL");
+
         return builder.toString();
     }
 

@@ -7,6 +7,7 @@ import org.orm.framework.DataMapper1.Utils.FindAttribute;
 import org.orm.framework.DataMapper1.Utils.FindAttributeRelation;
 import org.orm.framework.DataMapper1.Utils.GettersInvoke;
 import org.orm.framework.DataMapper1.Utils.SettersInvoke;
+import org.orm.framework.DataMapper1.methods.delete.Delete;
 import org.orm.framework.DataMapper1.methods.find.Find;
 import org.orm.framework.DataMapper1.methods.save.Save;
 import org.orm.framework.EntitiesDataSource.EntitiesDataSource;
@@ -332,6 +333,24 @@ public class ObjectBuilder<T> {
 
             return this;
         } catch (ORMException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public T deleteById(Object id) {
+        try {
+            ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
+            Connection connection = pool.getConnection();
+
+            Delete<T> deleteObject = new Delete<>(new JdbcTemplateImpl(connection));
+
+            T deletedObject = deleteObject.deleteById(entity, id);
+
+            pool.releaseConnection(connection);
+
+            return deletedObject;
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
