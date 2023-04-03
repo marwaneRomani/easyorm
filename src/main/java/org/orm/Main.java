@@ -6,6 +6,7 @@ import org.orm.models.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -60,54 +61,54 @@ public class Main {
 
 
 // save data ----------------------------------------------------------------------
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(gl);
-
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(asr);
-
-        OrmApplication
-                .buildObject(Filiere.class)
-                .save(abd);
-
-
-        OrmApplication
-                .buildObject(ChefFilliere.class)
-                .save(ibriz);
-
-        OrmApplication
-                .buildObject(ChefFilliere.class)
-                .save(khartoch);
-
-
-        for (Userr user : users)
-            OrmApplication
-                    .buildObject(Userr.class)
-                    .save(user);
-
-
-        for (Post post : posts)
-            OrmApplication
-                    .buildObject(Post.class)
-                    .save(post);
-
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message0);
-
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message1);
-
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message2);
-
-        OrmApplication
-                .buildObject(Message.class)
-                .save(message3);
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(gl);
+//
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(asr);
+//
+//        OrmApplication
+//                .buildObject(Filiere.class)
+//                .save(abd);
+//
+//
+//        OrmApplication
+//                .buildObject(ChefFilliere.class)
+//                .save(ibriz);
+//
+//        OrmApplication
+//                .buildObject(ChefFilliere.class)
+//                .save(khartoch);
+//
+//
+//        for (Userr user : users)
+//            OrmApplication
+//                    .buildObject(Userr.class)
+//                    .save(user);
+//
+//
+//        for (Post post : posts)
+//            OrmApplication
+//                    .buildObject(Post.class)
+//                    .save(post);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message0);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message1);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message2);
+//
+//        OrmApplication
+//                .buildObject(Message.class)
+//                .save(message3);
 
 
 // find data -----------------------------------------------------------------------------
@@ -127,19 +128,18 @@ public class Main {
 
         Filiere GL = OrmApplication
                 .buildObject(Filiere.class)
-                .findById("GL")
+                .findById("ASR")
                 .get("chefFilliere")
                 .get("students")
                 .get("participatedUsers")
                 .buildObject();
+        if (GL != null) {
+            System.out.println("_____chef de filiere " + GL.getChefFilliere());
+            System.out.println("_____chef de students " + GL.getStudents());
+            System.out.println("_____chef de participatedUsers " + GL.getParticipatedUsers());
+        }
 
-        System.out.println(GL);
 
-        ChefFilliere deletedById = OrmApplication
-                .buildObject(ChefFilliere.class)
-                .deleteById(2);
-
-        System.out.println(deletedById);
 
 //        User Oussama = new User();
 //        Oussama.setNic("Abcd123");
@@ -187,6 +187,16 @@ public class Main {
 //                .buildObject(Message.class)
 //                .findMany()
 
+
+        // delete
+                ChefFilliere deletedById = OrmApplication
+                        .buildObject(ChefFilliere.class)
+                        .deleteById(2);
+
+                System.out.println(deletedById);
+
+        Scanner scanner = new Scanner(System.in);
+        String next = scanner.next();
     }
 
 }
