@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Attribute {
     protected Class<?> clazz;
-
     protected String name;
     protected String originalName;
     protected String type;

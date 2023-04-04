@@ -1,6 +1,8 @@
 package org.orm.framework.modelsmapper.fieldsmapper.primarykey;
 
 
+import org.orm.framework.modelsmapper.fieldsmapper.attribute.Attribute;
+
 public class PrimaryKey {
     private String name;
     private String type;
@@ -38,6 +40,7 @@ public class PrimaryKey {
     public void setType(String type) {
         this.type = type;
     }
+
 
     public boolean isAutoIncrement() { return autoIncrement; }
 

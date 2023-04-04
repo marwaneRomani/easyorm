@@ -40,6 +40,13 @@ public class OrmApplication {
         return new ObjectBuilder<>(model);
     }
 
+    public static <T> ObjectBuilder<T> buildObject(Class<T> model, Boolean transactional) {
+        // builder pattern
+        mapModels();
+        return new ObjectBuilder<>(model, transactional);
+    }
+
+
     private static void mapModels() {
         if (!modelsMapped) {
             ApplicationState state = ApplicationState.getState();

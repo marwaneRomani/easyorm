@@ -1,5 +1,7 @@
 package org.orm.framework.transactionsmanager;
 
+import org.orm.framework.applicationstate.ApplicationState;
+import org.orm.framework.connectionpool.ConnectionPool;
 import org.orm.framework.datamapper1.methods.find.Find;
 import org.orm.framework.datamapper1.methods.save.Save;
 
@@ -38,7 +40,7 @@ public class Transaction {
             method.invoke(saveObject, args);
 
             conn.commit();
-        } catch (SQLException | InvocationTargetException | IllegalAccessException e) {
+        } catch (Exception e) {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
@@ -48,6 +50,32 @@ public class Transaction {
         }
     }
 
+
+    public static void wrapMethodInTransaction(Runnable runnable) {
+        ApplicationState state = ApplicationState.getState();
+        ConnectionPool pool = ConnectionPool.getInstance(state.getUrl(),state.getUsername(),state.getPassword(), state.getConnectionPoolMaxSize());
+
+        Connection connection = null;
+
+        try {
+            connection = pool.getConnection();
+
+            connection.setAutoCommit(false);
+
+            runnable.run();
+
+            connection.commit();
+        } catch (Exception e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    }
+
+
     public static void wrapMethodInTransaction(Connection conn, Find findObject, Method method, Object ...args) {
         try {
             conn.setAutoCommit(false);
@@ -55,7 +83,7 @@ public class Transaction {
             method.invoke(findObject, args);
 
             conn.commit();
-        } catch (SQLException | InvocationTargetException | IllegalAccessException e) {
+        } catch (Exception e) {
             try {
                 conn.rollback();
             } catch (SQLException ex) {

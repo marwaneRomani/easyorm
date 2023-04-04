@@ -2,10 +2,10 @@
   "models": "org.orm.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/SocialNetwork",
+    "url": "jdbc:mysql://localhost/Media",
     "username": "root",
-    "password": "",
-    "strategy": "create",
+    "password": "134194630",
+    "strategy": "update",
     "dialect" : "mysql",
     "fk_modified": "cascade"
   },

@@ -29,6 +29,7 @@ import java.util.List;
 
 public class ObjectBuilder<T> {
     private final Class<?> model;
+    private final Boolean transactionalCode;
     private final Entity entity;
     private final ApplicationState state;
     private boolean isFindOneMethod;
@@ -41,6 +42,23 @@ public class ObjectBuilder<T> {
         try {
             object = (T) Class.forName(model.getName()).newInstance();
             entity = EntitiesDataSource.getModelsSchemas().get(model.getSimpleName());
+            this.transactionalCode = true;
+            if (entity == null) {
+                throw new Exception("entity not found.");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public ObjectBuilder(Class<?> model, Boolean transactional) {
+        this.model = model;
+        this.state = ApplicationState.getState();
+        try {
+            object = (T) Class.forName(model.getName()).newInstance();
+            entity = EntitiesDataSource.getModelsSchemas().get(model.getSimpleName());
+            this.transactionalCode = transactional;
 
             if (entity == null) {
                 throw new Exception("entity not found.");
@@ -68,13 +86,16 @@ public class ObjectBuilder<T> {
 
             Method saveMethod = Save.class.getMethod("save", Entity.class, Object.class);
 
-            Transaction.wrapMethodInTransaction(connection, saveObject, saveMethod, entity, object);
+            if (transactionalCode)
+                Transaction.wrapMethodInTransaction(connection, saveObject, saveMethod, entity, object);
+            else
+                saveMethod.invoke(saveObject, entity, object);
 
             pool.releaseConnection(connection);
 
             return object;
 
-        } catch (SQLException | NoSuchMethodException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -155,7 +176,6 @@ public class ObjectBuilder<T> {
         Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
         this.object = findObject.findOne(entity, keys, conditionTypes ,values, chain);
-//        this.objects = null;
 
         pool.releaseConnection(connection);
     }
@@ -172,7 +192,6 @@ public class ObjectBuilder<T> {
         Find<T> findObject = new Find<>(new JdbcTemplateImpl(connection));
 
         this.objects = findObject.findMany(entity, keys, conditionTypes ,values, chain, limit);
-//        this.object = null;
 
         pool.releaseConnection(connection);
     }

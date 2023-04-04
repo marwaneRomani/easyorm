@@ -1,6 +1,7 @@
 package org.orm;
 
 import org.orm.framework.OrmApplication;
+import org.orm.framework.transactionsmanager.Transaction;
 import org.orm.models.*;
 
 import java.util.ArrayList;
@@ -109,96 +110,57 @@ public class Main {
 //        OrmApplication
 //                .buildObject(Message.class)
 //                .save(message3);
-
+//
+//        Commentaire commentaire = new Commentaire(1, "very good topic", new Date(), post0, oussama, null);
+//
+//        SubCommentaire subCommentaire = new SubCommentaire(1l, "yes it is this is something we should look at", new Date(), commentaire, marwane);
+//
+//
+//        OrmApplication
+//                .buildObject(Commentaire.class)
+//                .save(commentaire);
+//
+//        OrmApplication
+//                .buildObject(Notification.class)
+//                .save(new Notification(1, false, new Date(), "new comment on your post", "http://....", oussama));
+//
+//        OrmApplication
+//                .buildObject(SubCommentaire.class)
+//                .save(subCommentaire);
 
 // find data -----------------------------------------------------------------------------
-        
-        Userr OussamaGL = OrmApplication
+
+        Userr userr = OrmApplication
                 .buildObject(Userr.class)
                 .findOne()
-                .where("cin", "=", "155778877")
-                .and("name", "=", "Oussama")
+                .where("name", "=", "Oussama")
                 .execute()
                 .get("filiere")
                 .get("particapationFilieres")
+                .get("sentMessages")
                 .get("receivedMessages")
+                .get("notifications")
+                .get("posts")
+                .get("commentaires")
+                .get("subCommentaires")
+                .get("lignePostReactions")
                 .buildObject();
 
-        System.out.println(OussamaGL);
 
-        Filiere GL = OrmApplication
-                .buildObject(Filiere.class)
-                .findById("ASR")
-                .get("chefFilliere")
-                .get("students")
-                .get("participatedUsers")
-                .buildObject();
-        if (GL != null) {
-            System.out.println("_____chef de filiere " + GL.getChefFilliere());
-            System.out.println("_____chef de students " + GL.getStudents());
-            System.out.println("_____chef de participatedUsers " + GL.getParticipatedUsers());
-        }
-
-
-
-//        User Oussama = new User();
-//        Oussama.setNic("Abcd123");
-//        Oussama.setFirstName("Oussama");
-//        Oussama.setLastName("EL-Amrani");
-//        Oussama.setBirthDay(new Date(2002,9, 1));
-//
-//        User Marwane = new User();
-//        Marwane.setNic("Abcd123");
-//        Marwane.setFirstName("Marwane");
-//        Marwane.setLastName("Romani");
-//        Marwane.setBirthDay(new Date(2002, 9, 9));
-//
-//        OrmApplication
-//                .buildObject(User.class)
-//                .save(Oussama);
-//
-//        OrmApplication
-//                .buildObject(User.class)
-//                .save(Marwane);
-
-//        Message message = new Message(1l, "helle Oussama how are you", new Date() , true ,Marwane, Oussama);
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .save(message);
-//
-//        User user1 = OrmApplication
-//                .buildObject(User.class)
-//                .findById(1)
-//                .buildObject();
-//
-//        User user1 = OrmApplication
-//                .buildObject(User.class)
-//                .findOne()
-//                .where("name", "=" ,"Oussama")
-//                .execute()
-//                .buildObject();
-//
-//        User user1 = OrmApplication
-//                .buildObject(User.class)
-//                .findAll()
-//                .buildObject();
-//
-//        OrmApplication
-//                .buildObject(Message.class)
-//                .findMany()
-
-
-        // delete
-                ChefFilliere deletedById = OrmApplication
-                        .buildObject(ChefFilliere.class)
-                        .deleteById(2);
-
-                System.out.println(deletedById);
-
-        Scanner scanner = new Scanner(System.in);
-        String next = scanner.next();
+        sendMondey();
     }
 
+
+    public static void sendMondey() {
+        Transaction.wrapMethodInTransaction(() -> {
+            Userr userr = OrmApplication
+                    .buildObject(Userr.class, false)
+                    .deleteById("TEST");
+
+            if (userr != null)
+                OrmApplication
+                        .buildObject(Userr.class, false)
+                        .save(new Userr("TEST", "Test", "test", "test", "test",20));
+        });
+    }
 }
-
-
