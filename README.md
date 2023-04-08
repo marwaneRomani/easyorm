@@ -158,7 +158,7 @@ public class Message {
     private Date date;
     private Boolean seen;
 
-    // relations with User table
+    // relations with Personne table
     private User sender;
     private User receiver;
 

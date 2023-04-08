@@ -1,0 +1,21 @@
+package org.easyorm.tests.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+public @Data class Commentaire {
+    private Integer id;
+    private String content;
+    private Date date;
+
+    private Post post;
+    private Userr userr;
+    private List<SubCommentaire> subCommentaires;
+
+}
