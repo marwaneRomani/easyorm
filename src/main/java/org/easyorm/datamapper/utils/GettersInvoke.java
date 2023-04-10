@@ -26,7 +26,7 @@ public class GettersInvoke {
 
             return value;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage() + " getters are required.");
+            throw new RuntimeException(e.getMessage());
         }
     }
 

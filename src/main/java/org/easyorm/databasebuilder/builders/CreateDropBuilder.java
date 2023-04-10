@@ -1,5 +1,6 @@
 package org.easyorm.databasebuilder.builders;
 
+import org.easyorm.applicationstate.ApplicationState;
 import org.easyorm.databasebuilder.dialects.Dialect;
 import org.easyorm.entitiesdtasource.EntitiesDataSource;
 import org.easyorm.transactionsmanager.Transaction;
@@ -34,17 +35,20 @@ public class CreateDropBuilder extends CreateBuilder  implements StategyBuilder 
 
     private Consumer<Connection> drop() {
         return connection -> {
-            List<String> tables = new ArrayList<>();
-            EntitiesDataSource.getModelsSchemas()
-                    .values()
-                    .forEach(entity -> {
-                        tables.add(entity.getName());
-                    });
-            String dropTablesSyntax = dialect.getDropTablesSyntax(tables);
+
+            String[] words = ApplicationState.getState().getUrl().split("/");
+            String dbName = words[words.length - 1];
+
+            String dropDatabaseSyntax  = "DROP DATABASE `" + dbName  + "`" ;//TODO Need to be refactored;
+            String createDatabaseSyntax  = "CREATE SCHEMA `" + dbName  + "`" ;//TODO Need to be refactored;
+            String useDatabase = "USE " + dbName + ";";
 
             try {
                 Statement statement = connection.createStatement();
-                statement.execute(dropTablesSyntax);
+                statement.execute(dropDatabaseSyntax);
+                statement.execute(createDatabaseSyntax);
+                statement.executeUpdate(useDatabase);
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

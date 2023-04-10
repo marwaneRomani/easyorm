@@ -36,10 +36,11 @@ public class SaveUtils<T> {
         entity.getNormalAttributes()
                 .forEach(attribute -> {
                     if (!attribute.isAutoIncrement()) {
+                        Object attributeValue = GettersInvoke.getAttributeValue(attribute, objectToPersist);
                         insertQueryBuilder.column(
                                 attribute.getName()
                         ).value(
-                                GettersInvoke.getAttributeValue(attribute, objectToPersist)
+                                attributeValue
                         );
                     }
                 });

@@ -3,10 +3,6 @@ package org.easyorm;
 import org.easyorm.transactionsmanager.Transaction;
 import org.easyorm.tests.models.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
 

@@ -210,7 +210,7 @@ public class MapNormalAttributes {
         if (f.getType().equals(String.class)) {
             if (f.isAnnotationPresent(Column.class)) {
                 Column column = f.getAnnotation(Column.class);
-                return column.length() == 0 ? 255 : column.length();
+                return column.length() == 0 ? 100 : column.length();
             }
             return 255;
         }
@@ -234,7 +234,7 @@ public class MapNormalAttributes {
             case "Double":
                 return "DOUBLE";
             case "String":
-                return "VARCHAR(100)";
+                return "VARCHAR (" + lengthString(f) + ")";
             case "Date":
                 return "DATE";
             }

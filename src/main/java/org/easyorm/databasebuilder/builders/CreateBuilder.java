@@ -38,19 +38,20 @@ public class CreateBuilder implements StategyBuilder {
     protected Consumer<Connection> createTables() {
         return connection -> {
             for (Entity entity : EntitiesDataSource.getModelsSchemas().values()) {
-                String createTableSyntax =
-                        dialect.getCreateTableSyntax(entity.getName(),
-                                entity.getNormalAttributes(),
-                                Collections.singletonList(entity.getPrimaryKey()));
+                if (!entity.isAbstract()) {
+                    String createTableSyntax =
+                            dialect.getCreateTableSyntax(entity.getName(),
+                                    entity.getNormalAttributes(),
+                                    Collections.singletonList(entity.getPrimaryKey()));
 
-                try {
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate(createTableSyntax);
+                    try {
+                        Statement statement = connection.createStatement();
+                        statement.executeUpdate(createTableSyntax);
 
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-
             }
         };
     }
@@ -63,10 +64,12 @@ public class CreateBuilder implements StategyBuilder {
                     .forEach(entity -> {
                         for (Relation relation : entity.getRelations()) {
                             try {
-                                String[] sql = addConstraint(relation);
-                                for (int i = 0; i < sql.length; i++) {
-                                    Statement statement = connection.createStatement();
-                                    statement.executeUpdate(sql[i]);
+                                if (!relation.isIgnored()) {
+                                    String[] sql = addConstraint(relation);
+                                    for (int i = 0; i < sql.length; i++) {
+                                        Statement statement = connection.createStatement();
+                                        statement.executeUpdate(sql[i]);
+                                    }
                                 }
                             } catch (Exception e) {
                                 throw new RuntimeException(e);

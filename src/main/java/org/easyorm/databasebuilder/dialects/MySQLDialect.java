@@ -31,6 +31,10 @@ public class MySQLDialect implements Dialect {
             if (column.isAutoIncrement()) {
                 builder.append(" ").append(getAutoIncrementKeyword());
             }
+
+            if (!column.isNullable()) {
+                builder.append(" ").append(" NOT NULL "); //TODO need to refactor
+            }
             builder.append(",\n");
         }
         builder.append("PRIMARY KEY (");
