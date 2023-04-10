@@ -101,5 +101,26 @@ public class PostgreSqlDialect implements Dialect {
     public String getAutoIncrementKeyword() {
         return "SERIAL";
     }
+
+    @Override
+    public String getDropDatabaseSyntax(String dbName) {
+        String dropDatabaseSyntax = "DROP DATABASE " + '"' + dbName + '"' + ";";
+
+        return dropDatabaseSyntax;
+    }
+
+    @Override
+    public String getCreateDatabaseSyntax(String dbName) {
+        String createDatabaseSyntax = "CREATE DATABASE " + dbName + " --force;";
+
+        return createDatabaseSyntax;
+    }
+
+    @Override
+    public String getUseDatabaseSyntax(String dbName) {
+        String useDatabase = "SET search_path TO " + dbName + ";";
+
+        return useDatabase;
+    }
 }
 

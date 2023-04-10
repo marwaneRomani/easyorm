@@ -15,4 +15,8 @@ public interface Dialect {
     String getAddForeignKeySyntax(String tableName, String foreignKeyName, List<String> localColumns, String referencedTable, List<String> referencedColumns);
     String getAutoIncrementKeyword();
 
+    String getDropDatabaseSyntax(String dbName);
+    String getCreateDatabaseSyntax(String dbName);
+    String getUseDatabaseSyntax(String dbName);
+
 }

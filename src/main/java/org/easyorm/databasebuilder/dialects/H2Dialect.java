@@ -101,4 +101,25 @@ public class H2Dialect implements Dialect {
         return "AUTO_INCREMENT";
     }
 
+    @Override
+    public String getDropDatabaseSyntax(String dbName) {
+        String dropDatabaseSyntax  = "DROP DATABASE `" + dbName  + "`" ;
+
+        return dropDatabaseSyntax;
+    }
+
+    @Override
+    public String getCreateDatabaseSyntax(String dbName) {
+        String createDatabaseSyntax  = "CREATE SCHEMA `" + dbName  + "`" ;
+
+        return createDatabaseSyntax;
+    }
+
+    @Override
+    public String getUseDatabaseSyntax(String dbName) {
+        String useDatabase = "USE " + dbName + ";";
+        return useDatabase;
+    }
+
+
 }

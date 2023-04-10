@@ -18,6 +18,7 @@ public class InsertQueryBuilder {
 
     public InsertQueryBuilder value(Object value) {
         values.add(value);
+
         return this;
     }
 

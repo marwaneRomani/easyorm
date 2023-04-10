@@ -115,4 +115,24 @@ public class MySQLDialect implements Dialect {
     public String getAutoIncrementKeyword() {
         return "AUTO_INCREMENT";
     }
+
+    @Override
+    public String getDropDatabaseSyntax(String dbName) {
+        String dropDatabaseSyntax  = "DROP DATABASE `" + dbName  + "`" ;
+
+        return dropDatabaseSyntax;
+    }
+
+    @Override
+    public String getCreateDatabaseSyntax(String dbName) {
+        String createDatabaseSyntax  = "CREATE SCHEMA `" + dbName  + "`" ;
+
+        return createDatabaseSyntax;
+    }
+
+    @Override
+    public String getUseDatabaseSyntax(String dbName) {
+        String useDatabase = "USE " + dbName + ";";
+        return useDatabase;
+    }
 }

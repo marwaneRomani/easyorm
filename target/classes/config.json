@@ -1,11 +1,11 @@
 {
-  "models": "org.easyorm.tests.newModels.models2",
+  "models": "org.easyorm.tests.models",
 
   "database": {
-    "url": "jdbc:mysql://localhost/Test2",
+    "url": "jdbc:mysql://localhost/Media",
     "username": "root",
     "password": "134194630",
-    "strategy": "create",
+    "strategy": "create-drop",
     "dialect" : "mysql",
     "fk_modified": "cascade"
   },
