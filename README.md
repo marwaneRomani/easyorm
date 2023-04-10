@@ -27,3 +27,5 @@ EasyORM is highly influenced by other ORMs, such as [Hibernate](http://hibernate
 - Produced performant, flexible, clean and maintainable code.
 
 ## For documentation details visite the the easyorm website
+
+[Docs](https://oussama-el-amrani.github.io/ormFramework-website/)
