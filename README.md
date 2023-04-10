@@ -26,6 +26,4 @@ EasyORM is highly influenced by other ORMs, such as [Hibernate](http://hibernate
 - Supports MySQL / Postgres / H2 dbms
 - Produced performant, flexible, clean and maintainable code.
 
-## For documentation details visite the the easyorm website
-
-[Docs](https://oussama-el-amrani.github.io/ormFramework-website/)
+## For documentation details visite the the easyorm website: [Docs](https://oussama-el-amrani.github.io/ormFramework-website/)
