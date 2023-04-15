@@ -51,4 +51,12 @@
         </dependency>
 
     </dependencies>
+         
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/marwaneRomani/easyorm</url>
+        </repository>
+    </distributionManagement>
+
 </project>
